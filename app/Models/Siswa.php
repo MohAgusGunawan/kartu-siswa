@@ -20,6 +20,7 @@ class Siswa extends Model
         'alamat',
         'wa',
         'kelas',
+        'email',
         'foto'
     ];
 

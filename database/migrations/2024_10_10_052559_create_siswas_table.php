@@ -22,6 +22,7 @@ class CreateSiswasTable extends Migration
             $table->string('alamat', 50);
             $table->string('wa', 20);
             $table->string('kelas', 10);
+            $table->string('email', 255);
             $table->string('foto', 255);
             $table->timestamps();
         });

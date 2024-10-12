@@ -6,6 +6,9 @@ use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Rap2hpoutre\FastExcel\FastExcel;
+use App\Mail\FormSubmitted;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class FormController extends Controller
 {
@@ -49,6 +52,7 @@ class FormController extends Controller
             'alamat' => 'required|string|max:50',
             'wa' => 'required|string|max:20',
             'kelas' => 'required|string|max:10',
+            'email' => 'required|email',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -62,6 +66,7 @@ class FormController extends Controller
         $siswa->alamat = $request->alamat;
         $siswa->wa = $request->wa;
         $siswa->kelas = $request->kelas;
+        $siswa->email = $request->email;
 
         // Jika ada file foto yang di-upload
         if ($request->hasFile('foto')) {
@@ -100,7 +105,7 @@ class FormController extends Controller
             $path = $foto->storeAs('images/siswa', basename($tempPath), 'public');
 
             // Simpan path file ke dalam database
-            $siswa->foto = $path;
+            $siswa->foto = basename($tempPath);
 
             // Membersihkan memori
             imagedestroy($img);
@@ -109,6 +114,8 @@ class FormController extends Controller
 
         // Simpan data siswa ke database
         $siswa->save();
+        
+        Mail::to($request->email)->send(new FormSubmitted($request->all()));
 
         // Redirect setelah data berhasil disimpan
         return redirect()->route('form.index')->with('success', 'Data siswa berhasil ditambahkan.');
@@ -135,35 +142,82 @@ class FormController extends Controller
         return (new FastExcel($pelajarData))->download('siswa_report.xlsx');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $data = Siswa::findOrFail($id);
+        return view('form.show', compact('data'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $data = Siswa::findOrFail($id);
+        $ttl = explode(', ', $data->ttl);
+        $tempat_lahir = $ttl[0]; 
+        $tanggal_lahir = $ttl[1];
+
+        return view('form.edit', compact('data', 'tempat_lahir', 'tanggal_lahir'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $data = Siswa::findOrFail($id);
+
+        // Validasi
+        $request->validate([
+            'nis' => 'required|integer',
+            'nama' => 'required|string|max:100',
+            'tempat_lahir' => 'required|string|max:100',
+            'tanggal_lahir' => 'required|date',
+            'gender' => 'required|in:Laki-laki,Perempuan',
+            'alamat' => 'required|string|max:50',
+            'wa' => 'required|string|max:20',
+            'kelas' => 'required|string|max:10',
+            'email' => 'required|email',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // Update data
+        $ttl = $request->tempat_lahir . ', ' . $request->tanggal_lahir;
+
+        $data->update([
+            'nis' => $request->nis,
+            'nama' => $request->nama,
+            'ttl' => $ttl,  
+            'gender' => $request->gender,
+            'alamat' => $request->alamat,
+            'wa' => $request->wa,
+            'kelas' => $request->kelas,
+            'email' => $request->email,
+        ]);
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($data->foto) {
+                Storage::disk('public')->delete('images/siswa/' . $data->foto);
+            }
+
+            // Simpan foto baru
+            $file = $request->file('foto');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/images/siswa/', $filename);
+            $data->foto = $filename;
+            $data->save();
+        }
+
+        return redirect()->route('form.index')->with('success', 'Data Siswa berhasil diupdate 👍');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $data = Siswa::findOrFail($id);
+        
+        // Hapus foto pegawai jika ada
+        if ($data->foto) {
+            Storage::delete('images/siswa/' . $data->foto);
+        }
+
+        $data->delete();
+
+        return response()->json(['success' => 'Data pegawai berhasil dihapus 👍']);
     }
 }

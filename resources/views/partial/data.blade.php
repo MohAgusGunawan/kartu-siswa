@@ -62,21 +62,27 @@
                     data: 'kelas'
                 },
                 {
+                    data: 'email'
+                },
+                {
                     data: 'foto',
                     render: function(data, type, row, meta) {
-                            if (data !== '---') {
-                                return '<button type="button" class="btn btn-secondary btn-sm btn-icon-text" onclick="openModal(\'/storage/' +
-                                    data + '\')">Lihat Foto</button>';
-                            } else {
-                                return '---';
-                            }
+                        if (data !== '---') {
+                            return '<button type="button" class="btn btn-secondary btn-sm btn-icon-text" onclick="openModal(\'/storage/images/siswa/' +
+                                data + '\')">Lihat Foto</button>';
+                        } else {
+                            return '---';
                         }
-                    // render: function (data, type, row, meta) {
-                    //     if (data) {
-                    //         return '<img src="/storage/' + data + '" width="50" height="75"/>';
-                    //     }
-                    //     return '';
-                    // }
+                    }  
+                },
+                {
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary">Edit</a>' +
+                            ' <button type="button" class="btn btn-danger delete-btn" data-id="' + row.id + '">Delete</button>';
+                    }
                 }
             ],
             aLengthMenu: [
@@ -114,4 +120,46 @@
             length_sel.removeClass('form-control-sm');
         });
     });
+
+    $('#tbSiswa').on('click', '.delete-btn', function() {
+    var id = $(this).data('id');
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: "Anda tidak akan dapat mengembalikan ini!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus saja!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/form/' + id,
+          type: 'DELETE',
+          data: {
+            _token: '{{ csrf_token() }}'
+          },
+          success: function(response) {
+            // Tampilkan pesan SweetAlert bahwa data berhasil dihapus
+            Swal.fire(
+              'Terhapus!',
+              'Data pegawai berhasil dihapus.',
+              'success'
+            );
+            // Reload tabel setelah berhasil menghapus
+            $('#tbSiswa').DataTable().ajax.reload();
+          },
+          error: function(xhr, status, error) {
+            console.error(xhr);
+            Swal.fire(
+              'Gagal!',
+              'Terjadi kesalahan saat menghapus data: ' + error,
+              'error'
+            );
+          }
+        });
+      }
+    });
+  });
 </script>

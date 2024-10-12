@@ -70,7 +70,7 @@
             </div>
             <div class="form-group">
                 <label for="tanggal_lahir">Tanggal Lahir</label>
-                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" onfocus="this.showPicker()" required>
             </div>
             <div class="form-group">
                 <label for="gender">Jenis Kelamin</label>
@@ -94,6 +94,10 @@
                     <option value="IPA IB">IPA IB</option>
                     <option value="IPA IC">IPA IC</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="emailmu@gmail.com" value="{{ old('email') }}" required>
             </div>
             <div class="form-group">
                 <label for="foto">Foto</label>
@@ -132,7 +136,9 @@
                             <th>Alamat</th>
                             <th>Nomor HP</th>
                             <th>Kelas</th>
+                            <th>Email</th>
                             <th>Foto</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                 </table>  
