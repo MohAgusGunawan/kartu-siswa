@@ -9,6 +9,8 @@ use Rap2hpoutre\FastExcel\FastExcel;
 use App\Mail\FormSubmitted;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class FormController extends Controller
 {
@@ -26,7 +28,20 @@ class FormController extends Controller
 
             return Datatables::of($data)->make(true);
         }
-        return view('form');
+        $path = storage_path('app/data/kota.json'); // Ubah path sesuai tempat penyimpanan file
+        $json = file_get_contents($path);
+        $data = json_decode($json, true); // Decode JSON menjadi array
+
+        $kota = []; // Inisialisasi array kosong untuk kota
+
+        // Loop melalui provinsi dan kota
+        foreach ($data as $provinsi) {
+            // Menggabungkan semua kota dalam satu array
+            $kota = array_merge($kota, $provinsi['kota']);
+        }
+
+        return view('form', compact('kota'));
+
     }
 
     /**
@@ -44,7 +59,7 @@ class FormController extends Controller
     {
         // Validasi input dari form
         $request->validate([
-            'nis' => 'required|integer',
+            'nis' => 'required|integer|unique:siswa,nis',
             'nama' => 'required|string|max:100',
             'tempat_lahir' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',

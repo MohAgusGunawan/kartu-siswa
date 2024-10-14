@@ -2,8 +2,12 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Load jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Select2 JS CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <!-- Load DataTables -->
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
 <script>
     function openModal(imageSrc) {
         document.getElementById('modalImageContent').src = imageSrc;
@@ -14,6 +18,7 @@
     var tabel;
     // read data pengguna
     $(document).ready(function () {
+        $('.select2').select2();
         // console.log("AJAX URL: ", "{{ route('form.index') }}");
         tabel = $('#tbSiswa').DataTable({
             processing: true,

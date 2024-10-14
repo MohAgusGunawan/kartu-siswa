@@ -1,5 +1,3 @@
-<!-- resources/views/pegawai/create.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +10,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/form.css') }}">
+    <!-- Include Select2 CSS CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     @if(Session::has('success'))
@@ -36,6 +36,7 @@
       </script>
   @endif
     <div class="container">
+        <h2 style="margin-bottom: 30px">SMAN Negeri 1 Pamekasan</h2>
         <h4 class="mt-4" style="margin-top: -15px !important;">Form Input Data Siswa</h4>
 
         @if ($errors->any())
@@ -53,7 +54,7 @@
 
             <div class="form-group">
                 <label for="nis">NIS</label>
-                <input type="number" class="form-control" id="nis" name="nis" min="10000" max="99999" placeholder="5 angka" value="{{ old('nip') }}" required>
+                <input type="number" class="form-control" id="nis" name="nis" min="10000" max="99999" maxlength="5" placeholder="5 angka" value="{{ old('nip') }}" required>
             </div>
 
             <div class="form-group">
@@ -62,23 +63,28 @@
             </div>
             <div class="form-group">
                 <label for="tempat_lahir">Tempat Lahir</label>
-                <select class="form-control" id="tempat_lahir" name="tempat_lahir" required>
-                    <option value="Pamekasan">Pamekasan</option>
-                    <option value="Sumenep">Sumenep</option>
-                    <option value="Sampang">Sampang</option>
+                <select class="form-control select2" id="tempat_lahir" name="tempat_lahir" required style="width: 100%;">
+                    <option value="">Pilih Kota Kelahiran</option>
+                    @foreach($kota as $namaKota)
+                        <option value="{{ $namaKota }}">{{ $namaKota }}</option>
+                    @endforeach
                 </select>
-            </div>
+            </div>                    
             <div class="form-group">
                 <label for="tanggal_lahir">Tanggal Lahir</label>
                 <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" onfocus="this.showPicker()" required>
             </div>
             <div class="form-group">
-                <label for="gender">Jenis Kelamin</label>
-                <select class="form-control" id="gender" name="gender" required>
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                </select>
-            </div>
+                <label>Jenis Kelamin</label><br>
+                <div>
+                    <input type="radio" id="laki-laki" name="gender" value="Laki-laki" required>
+                    <label for="laki-laki">Laki-laki</label>
+                </div>
+                <div>
+                    <input type="radio" id="perempuan" name="gender" value="Perempuan" required>
+                    <label for="perempuan">Perempuan</label>
+                </div>
+            </div>            
             <div class="form-group">
                 <label for="alamat">Alamat</label>
                 <input type="text" class="form-control" id="alamat" name="alamat" maxlength="50" placeholder="JL. MESIGIT II /17" value="{{ old('alamat') }}" required>
@@ -90,9 +96,16 @@
             <div class="form-group">
                 <label for="kelas">Kelas</label>
                 <select class="form-control" id="kelas" name="kelas" required>
-                    <option value="IPA IA">IPA IA</option>
-                    <option value="IPA IB">IPA IB</option>
-                    <option value="IPA IC">IPA IC</option>
+                    <option value="X IPA A">X IPA A</option>
+                    <option value="X IPA B">X IPA B</option>
+                    <option value="X IPA C">X IPA C</option>
+                    <option value="X IPA D">X IPA D</option>
+                    <option value="X IPA E">X IPA E</option>
+                    <option value="X IPA F">X IPA F</option>
+                    <option value="X IPA G">X IPA G</option>
+                    <option value="X IPA H">X IPA H</option>
+                    <option value="X IPA I">X IPA I</option>
+                    <option value="X IPA J">X IPA J</option>
                 </select>
             </div>
             <div class="form-group">
@@ -166,6 +179,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/form.js') }}"></script>
+    
     @include('partial.data')
 </body>
 </html>
