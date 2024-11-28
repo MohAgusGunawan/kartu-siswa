@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Mengecualikan folder storage agar tidak diarahkan ke public
+    RewriteCond %{REQUEST_URI} !^/storage
+    RewriteRule ^(.*)$ /public/$1 [L]
+
+    # Mengarahkan kembali ke index.php di dalam folder public
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /public/index.php/$1 [L]
+</IfModule>

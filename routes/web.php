@@ -32,3 +32,5 @@ Route::resource('form', FormController::class);
 |--------------------------------------------------------------------------
 */
 Route::get('/form/download/1', [FormController::class, 'downloadReport'])->name('form.downloadReport');
+Route::get('/download/class-pdf', [FormController::class, 'downloadClassPdf'])->name('form.downloadClassPdf');
+Route::get('/download/card-pdf', [FormController::class, 'downloadCardPdf'])->name('form.downloadCardPdf');

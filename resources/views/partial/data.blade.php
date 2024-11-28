@@ -59,21 +59,29 @@
                 {
                     data: 'wa',
                     render: function (data, type, row, meta) {
-                        return '<a href="https://wa.me/' + data + '" target="_blank">' + data +
-                            '</a>';
-                    },
+                    // Sensor sebagian nomor WA, menampilkan hanya 4 digit terakhir
+                    let waMasked = data.slice(0, -4).replace(/[0-9]/g, 'x') + data.slice(-4);
+                    return '<a href="https://wa.me/+62' + data + '" target="_blank">' + waMasked + '</a>';
+                    }
                 },
                 {
                     data: 'kelas'
                 },
                 {
-                    data: 'email'
+                    data: 'email',
+                    render: function (data, type, row, meta) {
+                    // Sensor sebagian email, menampilkan karakter sebelum '@' secara parsial
+                    let emailParts = data.split('@');
+                    let emailMasked = emailParts[0].slice(0, 4).replace(/./g, 'x') + emailParts[0].slice(4) + '@' + 
+                    emailParts[1];
+                    return emailMasked;
+                    }
                 },
                 {
                     data: 'foto',
                     render: function(data, type, row, meta) {
                         if (data !== '---') {
-                            return '<button type="button" class="btn btn-secondary btn-sm btn-icon-text" onclick="openModal(\'/storage/images/siswa/' +
+                            return '<button type="button" class="btn btn-secondary btn-sm btn-icon-text" onclick="openModal(\'storage/app/public/images/siswa/' +
                                 data + '\')">Lihat Foto</button>';
                         } else {
                             return '---';
@@ -85,8 +93,8 @@
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row, meta) {
-                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary">Edit</a>' +
-                            ' <button type="button" class="btn btn-danger delete-btn" data-id="' + row.id + '">Delete</button>';
+                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary disabled">Edit</a>' +
+                            ' <button type="button" class="btn btn-danger delete-btn" data-id="' + row.id + '" disabled>Delete</button>';
                     }
                 }
             ],
@@ -103,7 +111,7 @@
                 info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
                 search: "Cari:",
                 lengthMenu: "Tampilkan _MENU_ entri",
-                zeroRecords: "Tidak ada data pegawai!",
+                zeroRecords: "Tidak ada data siswa!",
                 infoEmpty: "Menampilkan 0 sampai 0 dari 0 entri",
                 infoFiltered: "(disaring dari _MAX_ entri keseluruhan)"
             },

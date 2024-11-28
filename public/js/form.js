@@ -24,7 +24,16 @@ document.getElementById('nis').addEventListener('input', function () {
 });
 document.getElementById('nama').addEventListener('keypress', function (e) {
     // Mengecek apakah karakter yang diketik adalah angka (0-9)
-    if (e.key >= '0' && e.key <= '9') {
-        e.preventDefault(); // Mencegah karakter angka dituliskan
+    if ((e.key >= '0' && e.key <= '9') || e.key === '.') {
+        e.preventDefault(); // Mencegah karakter angka atau titik dituliskan
     }
+});
+document.getElementById('search-dropdown').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    const items = document.querySelectorAll('#dropdown-options a');
+
+    items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(query) ? 'block' : 'none';
+    });
 });

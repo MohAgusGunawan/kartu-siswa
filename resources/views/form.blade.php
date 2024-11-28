@@ -36,7 +36,7 @@
       </script>
   @endif
     <div class="container">
-        <h2 style="margin-bottom: 30px">SMAN Negeri 1 Pamekasan</h2>
+        <h2 style="margin-bottom: 30px">SMA Negeri 1 Pamekasan</h2>
         <h4 class="mt-4" style="margin-top: -15px !important;">Form Input Data Siswa</h4>
 
         @if ($errors->any())
@@ -106,6 +106,26 @@
                     <option value="X IPA H">X IPA H</option>
                     <option value="X IPA I">X IPA I</option>
                     <option value="X IPA J">X IPA J</option>
+                    <option value="XI IPA A">XI IPA A</option>
+                    <option value="XI IPA B">XI IPA B</option>
+                    <option value="XI IPA C">XI IPA C</option>
+                    <option value="XI IPA D">XI IPA D</option>
+                    <option value="XI IPA E">XI IPA E</option>
+                    <option value="XI IPA F">XI IPA F</option>
+                    <option value="XI IPA G">XI IPA G</option>
+                    <option value="XI IPA H">XI IPA H</option>
+                    <option value="XI IPS I">XI IPS I</option>
+                    <option value="XI IPS J">XI IPS J</option>
+                    <option value="XII IPA A">XII IPA A</option>
+                    <option value="XII IPA B">XII IPA B</option>
+                    <option value="XII IPA C">XII IPA C</option>
+                    <option value="XII IPA D">XII IPA D</option>
+                    <option value="XII IPA E">XII IPA E</option>
+                    <option value="XII IPA F">XII IPA F</option>
+                    <option value="XII IPA G">XII IPA G</option>
+                    <option value="XII IPA H">XII IPA H</option>
+                    <option value="XII IPS I">XII IPS I</option>
+                    <option value="XII IPS J">XII IPS J</option>
                 </select>
             </div>
             <div class="form-group">
@@ -116,29 +136,93 @@
                 <label for="foto">Foto</label>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="foto" name="foto" accept=".jpg, .jpeg, .png" onchange="previewImage(event)" required>
-                    <label class="custom-file-label" for="foto">Choose file</label>
+                    <label class="custom-file-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; width: 100%" for="foto">Choose file</label>
                 </div>
-                <img id="img-preview" src="" alt="Foto Pelajar" class="img-thumbnail img-preview mt-2">
+                <img id="img-preview" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Foto Pelajar" class="img-thumbnail img-preview mt-2">
             </div>
 
 
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
     </div>    
+    
+    <div class="container mt-4">
+        <h4>Rekap Data Siswa per Kelas</h4>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Kelas</th>
+                    <th>Jumlah Siswa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php $nomer = 1; @endphp
+                @foreach($rekapKelas as $rekap)
+                    <tr>
+                        <td>{{ $nomer++ }}</td>
+                        <td>{{ $rekap->kelas }}</td>
+                        <td>{{ $rekap->jumlah }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>   
 
     <div class="container d-flex justify-content-center align-items-center">
         <div class="table-container">
             <div class="head d-flex justify-content-between align-items-center mb-2">
                 <h4 class="mb-0">Data Siswa</h4>
-                <form action="{{ route('form.downloadReport') }}" method="GET" class="mb-0">
-                    <button type="submit" class="btn btn-success btn-sm d-flex align-items-center" id="bt-download">
-                        <i class="fa-regular fa-file-excel p-2"></i>
-                        <span id="spann" style="font-size: 1rem;">Download Laporan</span>
-                    </button>
-                </form>
+                <div class="d-flex gap-2 d-none">
+                    <form action="#" method="GET" id="form-download-class" class="mb-0">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-regular fa-file-pdf p-2"></i>
+                                <span class="spann" style="font-size: 1rem;">Unduh Perkelas</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @forelse($kelas as $kls)
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('form.downloadClassPdf', ['kelas' => $kls->kelas]) }}">
+                                            Kelas {{ $kls->kelas }}
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li><span class="dropdown-item text-muted">Kelas tidak tersedia</span></li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </form>
+                    <form action="{{ route('form.downloadReport') }}" method="GET" class="mb-0">
+                        <button type="submit" class="btn btn-success btn-sm d-flex align-items-center" id="bt-download">
+                            <i class="fa-regular fa-file-excel p-2"></i>
+                            <span class="spann" style="font-size: 1rem;">Unduh Semua</span>
+                        </button>
+                    </form>
+                    <form action="#" method="GET" id="form-download-class" class="mb-0">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-print p-2"></i>
+                                <span class="spann" style="font-size: 1rem;">Cetak Kartu</span>
+                            </button>
+                            <div class="dropdown-menu p-3" style="min-width: 130px;">
+                                <input type="text" class="form-control mb-2" id="search-dropdown" placeholder="Cari NIS...">
+                                <div id="dropdown-options">
+                                    @forelse($nis as $nis_siswa)
+                                        <a class="dropdown-item" href="{{ route('form.downloadCardPdf', ['nis' => $nis_siswa->nis]) }}">
+                                            {{ $nis_siswa->nis }}
+                                        </a>
+                                    @empty
+                                        <span class="dropdown-item text-muted">NIS tidak tersedia</span>
+                                    @endforelse
+                                </div>
+                            </div>
+                        </div>
+                    </form>                                
+                </div>
             </div>
             <div class="table-wrapper">
-                <table id="tbSiswa" class="table table-responsive table-hover">
+                <table id="tbSiswa" class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -159,6 +243,18 @@
         </div>
     </div>    
 </div>
+
+<!--<div class="container mt-5">-->
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="text-center">
+                <h5>Butuh bantuan?</h5>
+                <a href="https://wa.me/6281358750738?text=Halo,%20aku%20butuh%20bantuan" class="btn btn-success" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Contact via WhatsApp
+                </a>
+            </div>
+        </div>
+        <br>
+    <!--</div>-->
 
     <div class="modal fade" id="modalImage" tabindex="-1" aria-labelledby="modalImageLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -113,6 +113,12 @@ td {
 .fa-regular.fa-file-excel {
     font-size: 1rem;
 }
+.fa-regular.fa-file-pdf {
+    font-size: 1rem;
+}
+.fa-solid.fa-print {
+    font-size: 1rem;
+}
 
 #tbSiswa {
     width: 100%; /* Menyesuaikan lebar tabel pada mobile */
@@ -120,6 +126,19 @@ td {
 
 .table-container {
     width: 100%;
+}
+
+/* .dropdown-menu {
+    min-width: auto;
+} */
+.dropdown-item {
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.dropdown-item:hover {
+    background-color: #f8d7da; /* Warna merah muda muda */
+    color: #721c24; /* Warna merah gelap */
+    font-weight: bold; /* Opsional untuk menonjolkan teks */
 }
 
 /* .table-wrapper {
@@ -140,7 +159,13 @@ td {
     .fa-regular.fa-file-excel {
         font-size: 0.75rem;
     }
-    #spann {
-        font-size: 0.8rem !important;
+    .fa-regular.fa-file-pdf {
+        font-size: 0.75rem;
+    }
+    .spann {
+        display: none;
+    }
+    .dropdown-menu {
+        min-width: auto;
     }
 }

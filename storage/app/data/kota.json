@@ -714,5 +714,186 @@
             "Kab. Manokwari",
             "Kab. Sorong"
         ]
+    },
+    
+    {
+        "provinsi": "Johor",
+        "kota": [
+            "Johor Bahru",
+            "Batu Pahat",
+            "Kluang",
+            "Muar",
+            "Kota Tinggi",
+            "Segamat",
+            "Pontian",
+            "Kulai",
+            "Mersing",
+            "Tangkak"
+        ]
+    },
+    {
+        "provinsi": "Kedah",
+        "kota": [
+            "Alor Setar",
+            "Sungai Petani",
+            "Kulim",
+            "Langkawi",
+            "Baling",
+            "Jitra",
+            "Pendang",
+            "Kuala Kedah",
+            "Yan",
+            "Bandar Baharu"
+        ]
+    },
+    {
+        "provinsi": "Kelantan",
+        "kota": [
+            "Kota Bharu",
+            "Pasir Mas",
+            "Tumpat",
+            "Bachok",
+            "Pasir Puteh",
+            "Tanah Merah",
+            "Gua Musang",
+            "Kuala Krai",
+            "Machang",
+            "Jeli"
+        ]
+    },
+    {
+        "provinsi": "Melaka",
+        "kota": [
+            "Bandar Melaka",
+            "Alor Gajah",
+            "Jasin"
+        ]
+    },
+    {
+        "provinsi": "Negeri Sembilan",
+        "kota": [
+            "Seremban",
+            "Port Dickson",
+            "Nilai",
+            "Tampin",
+            "Jempol",
+            "Kuala Pilah",
+            "Rembau",
+            "Jelebu"
+        ]
+    },
+    {
+        "provinsi": "Pahang",
+        "kota": [
+            "Kuantan",
+            "Temerloh",
+            "Bentong",
+            "Raub",
+            "Lipis",
+            "Rompin",
+            "Maran",
+            "Cameron Highlands",
+            "Jerantut",
+            "Pekan"
+        ]
+    },
+    {
+        "provinsi": "Perak",
+        "kota": [
+            "Ipoh",
+            "Taiping",
+            "Teluk Intan",
+            "Sitiawan",
+            "Batu Gajah",
+            "Tanjung Malim",
+            "Kuala Kangsar",
+            "Bagan Serai",
+            "Kampar",
+            "Lumut"
+        ]
+    },
+    {
+        "provinsi": "Perlis",
+        "kota": [
+            "Kangar",
+            "Arau",
+            "Padang Besar"
+        ]
+    },
+    {
+        "provinsi": "Pulau Pinang",
+        "kota": [
+            "George Town",
+            "Bayan Lepas",
+            "Butterworth",
+            "Bukit Mertajam",
+            "Seberang Jaya",
+            "Balik Pulau"
+        ]
+    },
+    {
+        "provinsi": "Sabah",
+        "kota": [
+            "Kota Kinabalu",
+            "Tawau",
+            "Sandakan",
+            "Lahad Datu",
+            "Kudat",
+            "Semporna",
+            "Keningau",
+            "Ranau",
+            "Papar",
+            "Beaufort"
+        ]
+    },
+    {
+        "provinsi": "Sarawak",
+        "kota": [
+            "Kuching",
+            "Miri",
+            "Sibu",
+            "Bintulu",
+            "Sarikei",
+            "Sri Aman",
+            "Limbang",
+            "Kapit",
+            "Mukah",
+            "Simanggang"
+        ]
+    },
+    {
+        "provinsi": "Selangor",
+        "kota": [
+            "Shah Alam",
+            "Petaling Jaya",
+            "Klang",
+            "Subang Jaya",
+            "Rawang",
+            "Kuala Selangor",
+            "Banting",
+            "Seri Kembangan",
+            "Ampang Jaya",
+            "Sepang"
+        ]
+    },
+    {
+        "provinsi": "Terengganu",
+        "kota": [
+            "Kuala Terengganu",
+            "Dungun",
+            "Kemaman",
+            "Marang",
+            "Hulu Terengganu",
+            "Besut",
+            "Setiu"
+        ]
+    },
+    {
+        "provinsi": "Wilayah Persekutuan",
+        "kota": [
+            "Kuala Lumpur",
+            "Putrajaya",
+            "Labuan"
+        ]
     }
 ]
