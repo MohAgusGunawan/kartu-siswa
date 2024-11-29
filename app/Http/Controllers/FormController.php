@@ -132,10 +132,10 @@ class FormController extends Controller
         // Simpan data siswa ke database
         $siswa->save();
         
-        Mail::send('emails.form_submitted', ['siswa' => $siswa], function($message) use ($request) {
-            $message->to($request->email)
-                    ->subject('Form Submitted');
-        });
+        // Mail::send('emails.form_submitted', ['siswa' => $siswa], function($message) use ($request) {
+        //     $message->to($request->email)
+        //             ->subject('Form Submitted');
+        // });
 
         // Redirect setelah data berhasil disimpan
         return redirect()->route('form.index')->with('success', 'Data siswa berhasil ditambahkan.');
