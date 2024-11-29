@@ -81,7 +81,7 @@
                     data: 'foto',
                     render: function(data, type, row, meta) {
                         if (data !== '---') {
-                            return '<button type="button" class="btn btn-secondary btn-sm btn-icon-text" onclick="openModal(\'storage/app/public/images/siswa/' +
+                            return '<button type="button" class="btn btn-secondary btn-sm btn-icon-text" onclick="openModal(\'public/storage/images/siswa/' +
                                 data + '\')">Lihat Foto</button>';
                         } else {
                             return '---';
