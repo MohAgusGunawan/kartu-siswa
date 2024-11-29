@@ -69,7 +69,7 @@
                     <td>{{ $siswa->wa }}</td>
                     <td>{{ $siswa->kelas }}</td>
                     <td>
-                        <img src="{{ asset('storage/app/public/images/siswa/' . $siswa->foto) }}" width="50" height="50" />
+                        <img src="{{ asset('public/storage/images/siswa/' . $siswa->foto) }}" width="50" height="50" />
                     </td>
                 </tr>
             @endforeach

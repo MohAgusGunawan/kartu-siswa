@@ -122,7 +122,7 @@
                     <input type="file" class="custom-file-input" id="foto" name="foto" accept=".jpg, .jpeg, .png" onchange="previewImage(event)">
                     <label class="custom-file-label" for="foto">Choose file</label>
                 </div>
-                <img id="img-preview" src="{{ asset('storage/app/public/images/siswa/' . $data->foto) }}" alt="Foto Pelajar" class="img-thumbnail img-preview mt-2">
+                <img id="img-preview" src="{{ asset('public/storage/images/siswa/' . $data->foto) }}" alt="Foto Pelajar" class="img-thumbnail img-preview mt-2">
             </div>            
 
             <button type="submit" class="btn btn-primary">Update</button>
