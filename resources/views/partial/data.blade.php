@@ -81,7 +81,7 @@
                     data: 'foto',
                     render: function(data, type, row, meta) {
                         if (data !== '---') {
-                            return '<button type="button" class="btn btn-secondary btn-sm btn-icon-text" onclick="openModal(\'public/storage/images/siswa/' +
+                            return '<button type="button" class="btn btn-secondary btn-sm btn-icon-text" onclick="openModal(\'storage/images/siswa/' +
                                 data + '\')">Lihat Foto</button>';
                         } else {
                             return '---';
@@ -93,8 +93,8 @@
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row, meta) {
-                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary disabled">Edit</a>' +
-                            ' <button type="button" class="btn btn-danger delete-btn" data-id="' + row.id + '" disabled>Delete</button>';
+                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary">Edit</a>' +
+                            ' <button type="button" class="btn btn-danger delete-btn" data-id="' + row.id + '">Delete</button>';
                     }
                 }
             ],
@@ -157,7 +157,7 @@
             // Tampilkan pesan SweetAlert bahwa data berhasil dihapus
             Swal.fire(
               'Terhapus!',
-              'Data pegawai berhasil dihapus.',
+              'Data Siswa berhasil dihapus.',
               'success'
             );
             // Reload tabel setelah berhasil menghapus

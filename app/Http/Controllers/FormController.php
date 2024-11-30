@@ -88,44 +88,46 @@ class FormController extends Controller
         // Jika ada file foto yang di-upload
         if ($request->hasFile('foto')) {
             $foto = $request->file('foto');
-
-            // Resize gambar menggunakan GD atau Imagick
-            $img = imagecreatefromstring(file_get_contents($foto->getRealPath()));
-
-            // Ukuran baru untuk 4x6 (472x709 pixel)
-            $newWidth = 472;
-            $newHeight = 709;
-
-            // Membuat gambar baru dengan ukuran yang diinginkan
-            $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-            imagecopyresampled($resizedImage, $img, 0, 0, 0, 0, $newWidth, $newHeight, imagesx($img), imagesy($img));
-
-            // Kompres gambar ke 200KB jika diperlukan
-            ob_start();
-            imagejpeg($resizedImage, null, 75); // Menggunakan kualitas 75%
-            $compressedImageData = ob_get_contents();
-            ob_end_clean();
-
-            // Jika ukuran masih lebih dari 200KB, kompres lebih lanjut
-            if (strlen($compressedImageData) > 200 * 1024) {
-                ob_start();
-                imagejpeg($resizedImage, null, 50); // Kompres lebih lanjut jika perlu
-                $compressedImageData = ob_get_contents();
-                ob_end_clean();
+            $originalPath = $foto->getRealPath();
+            $extension = $foto->getClientOriginalExtension();
+        
+            // Ukuran target (4x6 cm = 472x709 pixel)
+            $targetWidth = 435;
+            $targetHeight = 581;
+        
+            // Buat gambar dari file yang diupload
+            if ($extension === 'jpeg' || $extension === 'jpg') {
+                $sourceImage = imagecreatefromjpeg($originalPath);
+            } elseif ($extension === 'png') {
+                $sourceImage = imagecreatefrompng($originalPath);
+            } else {
+                return response()->json(['error' => 'Format gambar tidak didukung. Gunakan JPEG atau PNG.']);
             }
-
-            // Simpan gambar yang sudah di-resize ke dalam file temporer
-            $tempPath = sys_get_temp_dir() . '/' . uniqid() . '.jpg';
-            file_put_contents($tempPath, $compressedImageData);
-
-            // Simpan gambar ke folder storage/app/public/images/siswa
-            $path = $foto->storeAs('images/siswa', basename($tempPath), 'public');
-
-            // Simpan path file ke dalam database
-            $siswa->foto = basename($tempPath);
-
-            // Membersihkan memori
-            imagedestroy($img);
+        
+            // Buat canvas baru untuk ukuran target
+            $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
+        
+            // Resize gambar
+            imagecopyresampled(
+                $resizedImage,
+                $sourceImage,
+                0, 0, 0, 0,
+                $targetWidth, $targetHeight,
+                imagesx($sourceImage), imagesy($sourceImage)
+            );
+        
+            // Nama file unik
+            $fileName = uniqid() . '.jpg';
+            $savePath = storage_path('app/public/images/siswa/') . $fileName;
+        
+            // Simpan gambar ke file
+            imagejpeg($resizedImage, $savePath, 75); // Kompresi 75%
+        
+            // Simpan nama file ke database
+            $siswa->foto = $fileName;
+        
+            // Bersihkan memori
+            imagedestroy($sourceImage);
             imagedestroy($resizedImage);
         }
 
@@ -316,10 +318,9 @@ class FormController extends Controller
     public function destroy($id)
     {
         $data = Siswa::findOrFail($id);
-        
-        // Hapus foto pegawai jika ada
+
         if ($data->foto) {
-            Storage::delete('images/siswa/' . $data->foto);
+            Storage::disk('public')->delete('images/siswa/' . $data->foto);
         }
 
         $data->delete();
