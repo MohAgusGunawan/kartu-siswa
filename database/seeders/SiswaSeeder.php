@@ -14,7 +14,7 @@ class SiswaSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = Siswa::factory()->count(1000)->make()->toArray(); // Buat 1000 data
-    DB::table('siswa')->insert($data);
+        // $data = Siswa::factory()->count(1000)->make()->toArray(); // Buat 1000 data
+        // DB::table('siswa')->insert($data);
     }
 }

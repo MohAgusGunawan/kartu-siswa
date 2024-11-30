@@ -162,6 +162,9 @@ td {
     .fa-regular.fa-file-pdf {
         font-size: 0.75rem;
     }
+    .fa-solid.fa-print {
+        font-size: 0.75rem;
+    }
     .spann {
         display: none;
     }
