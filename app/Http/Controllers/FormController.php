@@ -303,14 +303,51 @@ class FormController extends Controller
             if ($data->foto) {
                 Storage::disk('public')->delete('images/siswa/' . $data->foto);
             }
-
-            // Simpan foto baru
-            $file = $request->file('foto');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/images/siswa/', $filename);
-            $data->foto = $filename;
+        
+            $foto = $request->file('foto');
+            $originalPath = $foto->getRealPath();
+            $extension = $foto->getClientOriginalExtension();
+        
+            // Ukuran target (4x6 cm = 435x581 pixel)
+            $targetWidth = 435;
+            $targetHeight = 581;
+        
+            // Buat gambar dari file yang diupload
+            if ($extension === 'jpeg' || $extension === 'jpg') {
+                $sourceImage = imagecreatefromjpeg($originalPath);
+            } elseif ($extension === 'png') {
+                $sourceImage = imagecreatefrompng($originalPath);
+            } else {
+                return response()->json(['error' => 'Format gambar tidak didukung. Gunakan JPEG atau PNG.']);
+            }
+        
+            // Buat canvas baru untuk ukuran target
+            $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
+        
+            // Resize gambar
+            imagecopyresampled(
+                $resizedImage,
+                $sourceImage,
+                0, 0, 0, 0,
+                $targetWidth, $targetHeight,
+                imagesx($sourceImage), imagesy($sourceImage)
+            );
+        
+            // Nama file unik
+            $fileName = uniqid() . '.jpg';
+            $savePath = storage_path('app/public/images/siswa/') . $fileName;
+        
+            // Simpan gambar ke file
+            imagejpeg($resizedImage, $savePath, 75); // Kompresi 75%
+        
+            // Simpan nama file baru ke database
+            $data->foto = $fileName;
             $data->save();
-        }
+        
+            // Bersihkan memori
+            imagedestroy($sourceImage);
+            imagedestroy($resizedImage);
+        }        
 
         return redirect()->route('form.index')->with('success', 'Data Siswa berhasil diupdate 👍');
     }

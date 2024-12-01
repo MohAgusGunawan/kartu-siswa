@@ -173,7 +173,7 @@
         <div class="table-container">
             <div class="head d-flex justify-content-between align-items-center mb-2">
                 <h4 class="mb-0">Data Siswa</h4>
-                <div class="d-flex gap-2 d-none">
+                <div class="d-flex gap-2 ">
                     <form action="#" method="GET" id="form-download-class" class="mb-0">
                         <div class="btn-group">
                             <button type="button" class="btn btn-danger btn-sm dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">

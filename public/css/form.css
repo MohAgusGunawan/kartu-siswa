@@ -140,6 +140,10 @@ td {
     color: #721c24; /* Warna merah gelap */
     font-weight: bold; /* Opsional untuk menonjolkan teks */
 }
+#dropdown-options {
+    max-height: 200px; /* Batas tinggi maksimal */
+    overflow-y: auto; /* Aktifkan scroll jika konten melebihi max-height */
+}
 
 /* .table-wrapper {
     width: 100%;

@@ -93,8 +93,8 @@
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row, meta) {
-                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary disabled">Edit</a>' +
-                            ' <button type="button" class="btn btn-danger delete-btn disabled" data-id="' + row.id + '">Delete</button>';
+                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary">Edit</a>' +
+                            ' <button type="button" class="btn btn-danger delete-btn" data-id="' + row.id + '">Delete</button>';
                     }
                 }
             ],
