@@ -32,6 +32,7 @@ class DashboardController extends Controller
         $rekapKelas = DB::table('siswa')
         ->select('kelas', DB::raw('count(*) as jumlah'))
         ->groupBy('kelas')
+        ->orderBy('kelas', 'asc') 
         ->get();
 
         $kelas = Siswa::select('kelas')->distinct()->orderBy('kelas')->get();

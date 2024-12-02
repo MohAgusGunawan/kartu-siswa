@@ -2,83 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Siswa Kelas</title>
+    <title>Kartu Siswa</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f9;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
         }
-        h2 {
-            text-align: center;
-            color: #333;
+        .card-container {
+            width: 85.6mm; /* Panjang */
+            height: 53.98mm; /* Lebar */
+            /* position: absolute; */
+            background: url('{{ asset("storage/images/siswa/depan1.jpg") }}') no-repeat center;
+            background-size: cover;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+            overflow: hidden;
         }
-        table {
+        .card-container:not(:last-child) {
+            page-break-after: always; /* Tambahkan pemisahan hanya jika bukan elemen terakhir */
+        }
+        .photo {
+            /* position: absolute; */
+            top: 150px;
+            /* left: 10px; */
+            width: 80px;
+            height: 100px;
+            border-radius: 5px;
+            /* overflow: hidden; */
+            border: 1px solid #ccc;
+            /* margin-top: 75px; */
+        }
+        /* .photo img {
             width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
+            height: 100%;
+            object-fit: cover;
+        } */
+        .card-content {
+            /* position: absolute; */
+            color: #000;
+            font-size: 7px; /* Ukuran font lebih besar */
+            /* line-height: 1.5; */
         }
-        table, th, td {
-            border: 1px solid #ddd;
-            text-align: left;
-            padding: 8px;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
+        .card-content div {
+            margin-bottom: 5px; /* Tambahkan spasi antar baris informasi */
         }
     </style>
 </head>
 <body>
-
-    <h2>Laporan Siswa Kelas: {{ $kelas }}</h2>
-
-    <table>
-        <thead>
+    @foreach ($dataSiswa as $siswa)
+    <div class="card-container" style="width: 85.6mm; height: 53.98mm;">
+        <table style="width: 100%; height: 100%; border-collapse: collapse; margin-top: 72px">
             <tr>
-                <th>No</th>
-                <th>NIS</th>
-                <th>Nama</th>
-                <th>Tempat, Tanggal Lahir</th>
-                <th>Jenis Kelamin</th>
-                <th>Alamat</th>
-                <th>No HP/WA</th>
-                <th>Kelas</th>
-                <th>Foto</th>
+                <!-- Kolom Kiri: Foto -->
+                <td style="width: 30%; vertical-align: top; text-align: left; padding-left: 5px;">
+                    <div class="photo" style="width: 100%; height: auto; text-align: center;">
+                        <img src="{{ asset('storage/images/siswa/' . $siswa->foto) }}" 
+                             alt="Foto Siswa" 
+                             style="width: 80px; height: 100px; object-fit: cover;">
+                    </div>
+                </td>
+                 <!-- Kolom Kanan: Informasi -->
+                <td style="width: 70%; vertical-align: top; font-size: 8px; padding-left: -5px;">
+                    <div class="card-content">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 8px;">
+                            <tr>
+                                <td>NIS</td>
+                                <td>:</td>
+                                <td>{{ $siswa->nis }}</td>
+                            </tr>
+                            <tr>
+                                <td>Nama</td>
+                                <td>:</td>
+                                <td>{{ $siswa->nama }}</td>
+                            </tr>
+                            <tr>
+                                <td>TTL</td>
+                                <td>:</td>
+                                <td>{{ $siswa->ttl }}</td>
+                            </tr>
+                            <tr>
+                                <td>Jenis Kelamin</td>
+                                <td>:</td>
+                                <td>{{ $siswa->gender }}</td>
+                            </tr>
+                            <tr>
+                                <td>Alamat</td>
+                                <td>:</td>
+                                <td>{{ $siswa->alamat }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($dataSiswa as $index => $siswa)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $siswa->nis }}</td>
-                    <td>{{ $siswa->nama }}</td>
-                    <td>{{ $siswa->ttl }}</td>
-                    <td>{{ $siswa->gender }}</td>
-                    <td>{{ $siswa->alamat }}</td>
-                    <td>{{ $siswa->wa }}</td>
-                    <td>{{ $siswa->kelas }}</td>
-                    <td>
-                        <img src="{{ asset('storage/images/siswa/' . $siswa->foto) }}" width="50" height="50" />
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <div class="footer">
-        <p>Generated by Universitas Madura</p>
-    </div>
-
+        </table>
+    </div>  
+    @endforeach
 </body>
 </html>

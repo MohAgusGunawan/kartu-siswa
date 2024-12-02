@@ -45,7 +45,7 @@
         .card-content {
             /* position: absolute; */
             color: #000;
-            font-size: 8px; /* Ukuran font lebih besar */
+            font-size: 7px; /* Ukuran font lebih besar */
             /* line-height: 1.5; */
         }
         .card-content div {
@@ -66,9 +66,9 @@
                     </div>
                 </td>
                  <!-- Kolom Kanan: Informasi -->
-                <td style="width: 70%; vertical-align: top; font-size: 9px; padding-left: -5px;">
+                <td style="width: 70%; vertical-align: top; font-size: 8px; padding-left: -5px;">
                     <div class="card-content">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 9px;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 8px;">
                             <tr>
                                 <td>NIS</td>
                                 <td>:</td>

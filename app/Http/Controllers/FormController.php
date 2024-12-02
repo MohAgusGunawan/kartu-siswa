@@ -35,6 +35,7 @@ class FormController extends Controller
         $rekapKelas = DB::table('siswa')
         ->select('kelas', DB::raw('count(*) as jumlah'))
         ->groupBy('kelas')
+        ->orderBy('kelas', 'asc') 
         ->get();
 
         $kelas = Siswa::select('kelas')->distinct()->orderBy('kelas')->get();
@@ -175,19 +176,25 @@ class FormController extends Controller
         $dataSiswa = Siswa::where('kelas', $kelas)->get();
 
         // Initialize Mpdf
-        $mpdf = new Mpdf();
+        $mpdf = new Mpdf([
+            'format' => [85.6, 53.98], // Ukuran ID card dalam mm
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'orientation' => 'P'
+        ]);
 
         // Load the view and pass data
         $pdfContent = view('reports.siswa_perkelas', [
             'dataSiswa' => $dataSiswa,
-            'kelas' => $kelas,
         ])->render();
 
         // Write HTML content to Mpdf
         $mpdf->WriteHTML($pdfContent);
 
         // Output PDF as download
-        return $mpdf->Output("Laporan_Kelas_{$kelas}.pdf", 'D'); // 'D' untuk download
+        return $mpdf->Output("Kartu_Siswa_Kelas_{$kelas}.pdf", 'D'); // 'D' untuk download
     }
 
     public function downloadCardPdf(Request $request)
