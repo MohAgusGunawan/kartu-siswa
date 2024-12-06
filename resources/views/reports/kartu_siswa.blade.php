@@ -16,10 +16,12 @@
             background-color: #f5f5f5;
         }
         .card-container {
-            width: 85.6mm; /* Panjang */
+            width: 90mm; /* Panjang */
             height: 53.98mm; /* Lebar */
             /* position: absolute; */
-            background: url('{{ asset("storage/images/siswa/depan1.jpg") }}') no-repeat center;
+            /* flex: 1;
+            align-items: flex-end; */
+            background: url('{{ asset("storage/images/siswa/depan1.jpg") }}') no-repeat right;
             background-size: cover;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -54,7 +56,7 @@
     </style>
 </head>
 <body>
-    <div class="card-container" style="width: 85.6mm; height: 53.98mm;">
+    <div class="card-container" style="width: 90mm; height: 53.98mm;">
         <table style="width: 100%; height: 100%; border-collapse: collapse; margin-top: 72px">
             <tr>
                 <!-- Kolom Kiri: Foto -->
