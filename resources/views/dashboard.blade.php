@@ -69,7 +69,7 @@
                         <div class="btn-group">
                             <button type="button" class="btn btn-danger btn-sm dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-regular fa-file-pdf p-2"></i>
-                                <span class="spann" style="font-size: 1rem;">Unduh Perkelas</span>
+                                <span class="spann" style="font-size: 1rem;">Cetak Perkelas</span>
                             </button>
                             <ul class="dropdown-menu">
                                 @forelse($kelas as $kls)
