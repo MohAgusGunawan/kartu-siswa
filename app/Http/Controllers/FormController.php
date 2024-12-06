@@ -177,7 +177,7 @@ class FormController extends Controller
 
         // Initialize Mpdf
         $mpdf = new Mpdf([
-            'format' => [85.6, 53.98], // Ukuran ID card dalam mm
+            'format' => [88, 53.98], // Ukuran ID card dalam mm
             'margin_left' => 0,
             'margin_right' => 0,
             'margin_top' => 0,

@@ -23,8 +23,8 @@
             align-items: flex-end; */
             background: url('{{ asset("storage/images/siswa/depan1.jpg") }}') no-repeat right;
             background-size: cover;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+            border: 0.001px solid white;
+            /* border-radius: 10px; */
             /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
             overflow: hidden;
         }
@@ -38,6 +38,7 @@
             /* overflow: hidden; */
             border: 1px solid #ccc;
             /* margin-top: 75px; */
+            /* border: none !important; */
         }
         /* .photo img {
             width: 100%;
@@ -57,10 +58,10 @@
 </head>
 <body>
     <div class="card-container" style="width: 90mm; height: 53.98mm;">
-        <table style="width: 100%; height: 100%; border-collapse: collapse; margin-top: 72px">
+        <table style="width: 100%; height: 100%; margin-top: 72px">
             <tr>
                 <!-- Kolom Kiri: Foto -->
-                <td style="width: 30%; vertical-align: top; text-align: left; padding-left: 5px;">
+                <td style="width: 29%; vertical-align: top; text-align: left; padding-left: 5px;">
                     <div class="photo" style="width: 100%; height: auto; text-align: center;">
                         <img src="{{ asset('storage/images/siswa/' . $dataSiswa->foto) }}" 
                              alt="Foto Siswa" 
@@ -68,9 +69,9 @@
                     </div>
                 </td>
                  <!-- Kolom Kanan: Informasi -->
-                <td style="width: 70%; vertical-align: top; font-size: 8px; padding-left: -5px;">
+                <td style="width: 71%; vertical-align: top; font-size: 8px; padding-left: -5px;">
                     <div class="card-content">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 8px;">
+                        <table style="width: 100%; font-size: 8px;">
                             <tr>
                                 <td>NIS</td>
                                 <td>:</td>
