@@ -20,7 +20,10 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Siswa::all();
+            // $data = Siswa::all();
+            $data = Siswa::table('siswa')
+            ->orderByRaw("id_card IS NULL OR id_card = '' DESC")
+            ->get();
             $data = $data->map(function($item) {
                 return array_map('utf8_encode', $item->toArray());
             });
