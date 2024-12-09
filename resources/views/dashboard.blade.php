@@ -178,7 +178,8 @@
               <div class="modal-body">
                 <div class="form-group">
                   <label for="dataField">ID CARD</label>
-                  <input type="number" class="form-control" id="dataField" name="data" required>
+                  <input type="number" class="form-control" id="dataField" name="data" required 
+       oninput="if(this.value.length > 10) this.value = this.value.slice(0, 10);">
                 </div>
               </div>
               <div class="modal-footer">
