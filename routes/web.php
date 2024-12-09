@@ -37,6 +37,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 */
 Route::middleware('auth:pengguna')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::put('/route/update/{id}', [DashboardController::class, 'update'])->name('route.update');
 });
 /*
 |--------------------------------------------------------------------------

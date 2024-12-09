@@ -50,6 +50,7 @@
             color: #000;
             font-size: 7px; /* Ukuran font lebih besar */
             /* line-height: 1.5; */
+            font-weight: bold;
         }
         .card-content div {
             margin-bottom: 5px; /* Tambahkan spasi antar baris informasi */
@@ -71,7 +72,7 @@
                  <!-- Kolom Kanan: Informasi -->
                 <td style="width: 71%; vertical-align: top; font-size: 8px; padding-left: -5px;">
                     <div class="card-content">
-                        <table style="width: 100%; font-size: 8px;">
+                        <table style="width: 100%; font-size: 8px; font-weight: bold; margin-top: -5px;">
                             <tr>
                                 <td>NIS</td>
                                 <td>:</td>

@@ -15,6 +15,7 @@ class CreateSiswasTable extends Migration
     {
         Schema::create('siswa', function (Blueprint $table) {
             $table->id(); // Ini adalah id PK, dengan AI (Auto Increment)
+            $table->integer('id_card');
             $table->integer('nis');
             $table->string('nama', 100);
             $table->string('ttl', 100);

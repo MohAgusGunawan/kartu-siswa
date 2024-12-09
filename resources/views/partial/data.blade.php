@@ -1,4 +1,5 @@
 @stack('script')
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Load jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -42,6 +43,14 @@
                     }
                 },
                 {
+                    data: 'id_card',
+                    render: function(data, type, row, meta) {
+                        return data + 
+                            ' <button type="button" class="btn btn-primary btn-sm btn-icon-text edit-btn" data-id="' + 
+                            row.id + '" data-value="' + data + '">Edit</button>';
+                    }
+                },
+                {
                     data: 'nis'
                 },
                 {
@@ -51,7 +60,7 @@
                     data: 'ttl'
                 },
                 {
-                    data: 'gender'
+                    data: 'gender',
                 },
                 {
                     data: 'alamat'
@@ -175,4 +184,94 @@
       }
     });
   });
+
+  $(document).on('click', '.edit-btn', function() {
+    var id = $(this).data('id'); // Ambil ID data dari atribut tombol
+    var value = $(this).data('value'); // Ambil nilai data dari atribut tombol
+    
+    // Isi modal dengan data yang diambil
+    $('#dataField').val(value); // Masukkan nilai ke input di modal
+    
+    // Ubah URL form dengan ID data
+    var updateUrl = "/route/update/" + id; // Ganti '/route/update/' dengan route update Anda
+    $('#editForm').attr('action', updateUrl);
+
+    // Tampilkan modal
+    $('#editModal').modal('show');
+});
+
+$('#editModal').on('shown.bs.modal', function() {
+        var input = $('#dataField');
+        input.focus(); // Fokus pada input
+        input.select(); // Blok semua teks dalam input
+    });
+
+// Deteksi event paste di input
+$('#dataField').on('paste', function() {
+        var input = $(this); // Ambil elemen input
+
+        // Tunggu hingga paste selesai, lalu submit form
+        setTimeout(function() {
+            $('#editForm').submit(); // Submit form secara otomatis
+        }, 100); // Tunggu 100ms untuk memastikan paste selesai
+    });
+
+$(document).on('submit', '#editForm', function(e) {
+    e.preventDefault(); // Mencegah reload halaman
+    
+    var form = $(this);
+    var url = form.attr('action'); // URL update dari atribut form
+    var data = form.serialize(); // Ambil data form
+
+    $.ajax({
+        type: 'POST', // Sesuaikan dengan metode Anda (PUT jika RESTful)
+        url: url,
+        data: data,
+        success: function(response) {
+            // Tampilkan pesan sukses jika ada
+            // alert('Data berhasil diperbarui!');
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: 'success',
+              title: 'Data berhasil diperbarui!'
+            });
+
+            // Tutup modal
+            $('#editModal').modal('hide');
+
+            // Perbarui baris data di DataTable
+            $('#tbSiswa').DataTable().ajax.reload();
+        },
+        error: function(xhr) {
+            // alert('Terjadi kesalahan. Silakan coba lagi.');
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: 'error',
+              title: 'Terjadi kesalahan. Silakan coba lagi.'
+            });
+            console.error(xhr.responseText); // Debugging jika ada error
+        }
+    });
+});
+
 </script>

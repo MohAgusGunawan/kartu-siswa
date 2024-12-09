@@ -13,6 +13,7 @@ class Siswa extends Model
 
     // Tentukan kolom yang dapat diisi (mass assignable)
     protected $fillable = [
+        'id_card',
         'nis',
         'nama',
         'ttl',
