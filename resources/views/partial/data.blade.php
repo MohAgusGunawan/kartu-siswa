@@ -30,7 +30,7 @@
                 header: true,
                 footer: true
             },
-            ajax: "{{ route('form.index') }}",
+            ajax: "{{ route('dashboard.index') }}",
             columns: [
                 {
                     data: null,
