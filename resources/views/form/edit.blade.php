@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        <form action="{{ route('form.update', $data->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('dashboard.update', $data->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -78,37 +78,14 @@
             <div class="form-group">
                 <label for="kelas">Kelas</label>
                 <select class="form-control" id="kelas" name="kelas" required>
-                    <option value="X IPA A" {{ $data->kelas == 'X IPA A' ? 'selected' : '' }}>X IPA A</option>
-                    <option value="X IPA B" {{ $data->kelas == 'X IPA B' ? 'selected' : '' }}>X IPA B</option>
-                    <option value="X IPA C" {{ $data->kelas == 'X IPA C' ? 'selected' : '' }}>X IPA C</option>
-                    <option value="X IPA D" {{ $data->kelas == 'X IPA D' ? 'selected' : '' }}>X IPA D</option>
-                    <option value="X IPA E" {{ $data->kelas == 'X IPA E' ? 'selected' : '' }}>X IPA E</option>
-                    <option value="X IPA F" {{ $data->kelas == 'X IPA F' ? 'selected' : '' }}>X IPA F</option>
-                    <option value="X IPA G" {{ $data->kelas == 'X IPA G' ? 'selected' : '' }}>X IPA G</option>
-                    <option value="X IPA H" {{ $data->kelas == 'X IPA H' ? 'selected' : '' }}>X IPA H</option>
-                    <option value="X IPA I" {{ $data->kelas == 'X IPA I' ? 'selected' : '' }}>X IPA I</option>
-                    <option value="X IPA J" {{ $data->kelas == 'X IPA J' ? 'selected' : '' }}>X IPA J</option>
-                    <option value="XI IPA A" {{ $data->kelas == 'XI IPA A' ? 'selected' : '' }}>XI IPA A</option>
-                    <option value="XI IPA B" {{ $data->kelas == 'XI IPA B' ? 'selected' : '' }}>XI IPA B</option>
-                    <option value="XI IPA C" {{ $data->kelas == 'XI IPA C' ? 'selected' : '' }}>XI IPA C</option>
-                    <option value="XI IPA D" {{ $data->kelas == 'XI IPA D' ? 'selected' : '' }}>XI IPA D</option>
-                    <option value="XI IPA E" {{ $data->kelas == 'XI IPA E' ? 'selected' : '' }}>XI IPA E</option>
-                    <option value="XI IPA F" {{ $data->kelas == 'XI IPA F' ? 'selected' : '' }}>XI IPA F</option>
-                    <option value="XI IPA G" {{ $data->kelas == 'XI IPA G' ? 'selected' : '' }}>XI IPA G</option>
-                    <option value="XI IPA H" {{ $data->kelas == 'XI IPA H' ? 'selected' : '' }}>XI IPA H</option>
-                    <option value="XI IPS I" {{ $data->kelas == 'XI IPS I' ? 'selected' : '' }}>XI IPS I</option>
-                    <option value="XI IPS J" {{ $data->kelas == 'XI IPS J' ? 'selected' : '' }}>XI IPS J</option>
-                    <option value="XII IPA A" {{ $data->kelas == 'XII IPA A' ? 'selected' : '' }}>XII IPA A</option>
-                    <option value="XII IPA B" {{ $data->kelas == 'XII IPA B' ? 'selected' : '' }}>XII IPA B</option>
-                    <option value="XII IPA C" {{ $data->kelas == 'XII IPA C' ? 'selected' : '' }}>XII IPA C</option>
-                    <option value="XII IPA D" {{ $data->kelas == 'XII IPA D' ? 'selected' : '' }}>XII IPA D</option>
-                    <option value="XII IPA E" {{ $data->kelas == 'XII IPA E' ? 'selected' : '' }}>XII IPA E</option>
-                    <option value="XII IPA F" {{ $data->kelas == 'XII IPA F' ? 'selected' : '' }}>XII IPA F</option>
-                    <option value="XII IPA G" {{ $data->kelas == 'XII IPA G' ? 'selected' : '' }}>XII IPA G</option>
-                    <option value="XII IPA H" {{ $data->kelas == 'XII IPA H' ? 'selected' : '' }}>XII IPA H</option>
-                    <option value="XII IPS I" {{ $data->kelas == 'XII IPS I' ? 'selected' : '' }}>XII IPS I</option>
-                    <option value="XII IPS J" {{ $data->kelas == 'XII IPS J' ? 'selected' : '' }}>XII IPS J</option>
-                </select>
+                    <option value="" disabled selected>Pilih Kelas</option>
+                    @foreach ($kelas as $item)
+                        <option value="{{ $item->id }}" 
+                            @if(old('kelas', $data->kelas_id) == $item->id) selected @endif>
+                            {{ $item->nama_kelas }}
+                        </option>
+                    @endforeach
+                </select>                
             </div>
             
             <div class="form-group">

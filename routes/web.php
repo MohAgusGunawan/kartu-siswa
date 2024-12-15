@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MigrateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,19 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', [FormController::class, 'index'])->name('form.index');
 /*
 |--------------------------------------------------------------------------
+| Halaman API Siswa
+|--------------------------------------------------------------------------
+*/
+Route::get('/data-siswa', function () {
+    return view('data-siswa');
+});
+Route::get('/migrate-data', function () {
+    return view('migrate-data');
+});
+Route::post('/migrate-siswa-to-slims', [MigrateController::class, 'migrateSiswaToSlims']);
+Route::get('/migrate-photos', [MigrateController::class, 'migratePhotos']);
+/*
+|--------------------------------------------------------------------------
 | Halaman Login
 |--------------------------------------------------------------------------
 */
@@ -36,7 +50,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth:pengguna')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::resource('dashboard', DashboardController::class);
     Route::put('/route/update/{id}', [DashboardController::class, 'update'])->name('route.update');
 });
 /*

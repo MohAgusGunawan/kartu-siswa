@@ -63,6 +63,20 @@ return [
             ]) : [],
         ],
 
+        'slims' => [
+            'driver' => 'mysql',
+            'host' => env('DB_SLIMS_HOST', '127.0.0.1'),
+            'port' => env('DB_SLIMS_PORT', '3306'),
+            'database' => env('DB_SLIMS_DATABASE', 'forge'),
+            'username' => env('DB_SLIMS_USERNAME', 'forge'),
+            'password' => env('DB_SLIMS_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

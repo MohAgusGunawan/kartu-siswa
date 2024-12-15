@@ -52,7 +52,7 @@
                 @foreach($rekapKelas as $rekap)
                     <tr>
                         <td>{{ $nomer++ }}</td>
-                        <td>{{ $rekap->kelas }}</td>
+                        <td>{{ $rekap->nama_kelas }}</td>
                         <td>{{ $rekap->jumlah }}</td>
                     </tr>
                 @endforeach
@@ -74,8 +74,8 @@
                             <ul class="dropdown-menu">
                                 @forelse($kelas as $kls)
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('form.downloadClassPdf', ['kelas' => $kls->kelas]) }}">
-                                            Kelas {{ $kls->kelas }}
+                                        <a class="dropdown-item" href="{{ route('form.downloadClassPdf', ['kelas' => $kls->nama_kelas]) }}">
+                                            Kelas {{ $kls->nama_kelas }}
                                         </a>
                                     </li>
                                 @empty

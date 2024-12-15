@@ -52,17 +52,20 @@
             /* line-height: 1.5; */
             font-weight: bold;
         }
+        .light-text {
+  font-weight: 200; /* Lebih tipis dari normal */
+}
         .card-content div {
             margin-bottom: 5px; /* Tambahkan spasi antar baris informasi */
         }
     </style>
 </head>
 <body>
-    <div class="card-container" style="width: 90mm; height: 53.98mm;">
-        <table style="width: 100%; height: 100%; margin-top: 72px">
+    <div class="card-container" style="width: 85.6mm; height: 53.98mm;">
+        <table style="width: 100%; height: 100%; border-collapse: collapse; margin-top: 72px">
             <tr>
                 <!-- Kolom Kiri: Foto -->
-                <td style="width: 29%; vertical-align: top; text-align: left; padding-left: 5px;">
+                <td style="width: 30%; vertical-align: top; text-align: left; padding-left: 5px;">
                     <div class="photo" style="width: 100%; height: auto; text-align: center;">
                         <img src="{{ asset('storage/images/siswa/' . $dataSiswa->foto) }}" 
                              alt="Foto Siswa" 
@@ -70,9 +73,9 @@
                     </div>
                 </td>
                  <!-- Kolom Kanan: Informasi -->
-                <td style="width: 71%; vertical-align: top; font-size: 8px; padding-left: -5px;">
+                <td style="width: 70%; vertical-align: top; font-size: 8px; padding-left: -5px;">
                     <div class="card-content">
-                        <table style="width: 100%; font-size: 8px; font-weight: bold; margin-top: -5px;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 8px; font-weight: bold; margin-top: -2.5px;">
                             <tr>
                                 <td>NIS</td>
                                 <td>:</td>
@@ -103,6 +106,6 @@
                 </td>
             </tr>
         </table>
-    </div>    
+    </div>  
 </body>
 </html>

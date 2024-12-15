@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
+use App\Models\Kelas;
 
 class FormController extends Controller
 {
@@ -32,16 +33,22 @@ class FormController extends Controller
             return Datatables::of($data)->make(true);
         }
         $kota = $this->getKota();
-        $rekapKelas = DB::table('siswa')
-        ->select('kelas', DB::raw('count(*) as jumlah'))
-        ->groupBy('kelas')
-        ->orderBy('kelas', 'asc') 
-        ->get();
+        // $rekapKelas = DB::table('siswa')
+        // ->select('kelas', DB::raw('count(*) as jumlah'))
+        // ->groupBy('kelas')
+        // ->orderBy('kelas', 'asc') 
+        // ->get();
+        // $rekapKelas = DB::table('siswa')
+        // ->join('kelas', 'siswa.kelas_id', '=', 'kelas.id') // Bergabung dengan tabel kelas
+        // ->select('kelas.nama_kelas', DB::raw('count(*) as jumlah')) // Mengambil nama_kelas dan jumlah siswa
+        // ->groupBy('kelas.nama_kelas') // Grup berdasarkan nama_kelas
+        // ->orderBy('kelas.nama_kelas', 'asc') // Urutkan berdasarkan nama_kelas
+        // ->get();
 
-        $kelas = Siswa::select('kelas')->distinct()->orderBy('kelas')->get();
+        $kelas = Kelas::all();
         $nis = Siswa::select('nis')->distinct()->orderBy('nis')->get();
 
-        return view('form', compact('kota', 'rekapKelas', 'kelas', 'nis'));
+        return view('form', compact('kota', 'kelas', 'nis'));
 
     }
 
@@ -135,10 +142,10 @@ class FormController extends Controller
         // Simpan data siswa ke database
         $siswa->save();
         
-        // Mail::send('emails.form_submitted', ['siswa' => $siswa], function($message) use ($request) {
-        //     $message->to($request->email)
-        //             ->subject('Form Submitted');
-        // });
+        Mail::send('emails.form_submitted', ['siswa' => $siswa], function($message) use ($request) {
+            $message->to($request->email)
+                    ->subject('Form Submitted');
+        });
 
         // Redirect setelah data berhasil disimpan
         return redirect()->route('form.index')->with('success', 'Data siswa berhasil ditambahkan.');
@@ -146,37 +153,55 @@ class FormController extends Controller
 
     public function downloadReport()
     {
-        $data = Siswa::all();
+        // Ambil data siswa beserta relasi kelas (eager loading)
+        $data = Siswa::with('kelas')->get();
         $no = 1;
 
+        // Transformasi data untuk laporan
         $pelajarData = $data->map(function ($pelajar) use (&$no) {
             return [
                 'NO' => $no++,
+                'RFID' => $pelajar->id_card,
                 'NIS' => $pelajar->nis,
                 'Nama' => $pelajar->nama,
                 'Tempat, Tanggal Lahir' => $pelajar->ttl,
                 'Jenis Kelamin' => $pelajar->gender,
                 'Alamat' => $pelajar->alamat,
                 'Nomor HP (WA)' => $pelajar->wa,
-                'Kelas' => $pelajar->kelas,
+                'Kelas' => $pelajar->kelas ? $pelajar->kelas->nama_kelas : '-', // Nama kelas atau '-'
             ];
         });
 
+        // Ekspor ke Excel menggunakan FastExcel
         return (new FastExcel($pelajarData))->download('siswa_report.xlsx');
     }
 
     public function downloadClassPdf(Request $request)
     {
-        $kelas = $request->query('kelas');
+        // Ambil parameter nama_kelas dari query
+        $namaKelas = $request->query('kelas');
 
-        if (!$kelas) {
+        // Validasi jika kelas tidak dipilih
+        if (!$namaKelas) {
             return back()->with('error', 'Silakan pilih kelas.');
         }
 
-        $dataSiswa = Siswa::where('kelas', $kelas)->get();
+        // Ambil id kelas berdasarkan nama_kelas
+        $kelas = Kelas::where('nama_kelas', $namaKelas)->first();
+
+        if (!$kelas) {
+            return back()->with('error', 'Kelas tidak ditemukan.');
+        }
+
+        $dataSiswa = Siswa::where('kelas_id', $kelas->id)->get();
+
+        // Cek apakah ada data siswa dalam kelas tersebut
+        if ($dataSiswa->isEmpty()) {
+            return back()->with('error', 'Tidak ada siswa dalam kelas ini.');
+        }
 
         // Initialize Mpdf
-        $mpdf = new Mpdf([
+        $mpdf = new \Mpdf\Mpdf([
             'format' => [88, 53.98], // Ukuran ID card dalam mm
             'margin_left' => 0,
             'margin_right' => 0,
@@ -185,16 +210,16 @@ class FormController extends Controller
             'orientation' => 'P'
         ]);
 
-        // Load the view and pass data
+        // Load the view dan pass data ke view
         $pdfContent = view('reports.siswa_perkelas', [
             'dataSiswa' => $dataSiswa,
         ])->render();
 
-        // Write HTML content to Mpdf
+        // Tulis HTML ke Mpdf
         $mpdf->WriteHTML($pdfContent);
 
-        // Output PDF as download
-        return $mpdf->Output("Kartu_Siswa_Kelas_{$kelas}.pdf", 'D'); // 'D' untuk download
+        // Output PDF untuk diunduh
+        return $mpdf->Output("Kartu_Siswa_Kelas_{$namaKelas}.pdf", 'D'); // 'D' untuk download
     }
 
     public function downloadCardPdf(Request $request)
@@ -248,7 +273,9 @@ class FormController extends Controller
         $tanggal_lahir = Carbon::createFromFormat('d F Y', $ttl[1])->format('Y-m-d');
         $kota = $this->getKota();
 
-        return view('form.edit', compact('data', 'kota', 'tempat_lahir', 'tanggal_lahir'));
+        $kelas = Kelas::all();
+
+        return view('form.edit', compact('data', 'kelas', 'kota', 'tempat_lahir', 'tanggal_lahir'));
     }
 
     private function getKota()

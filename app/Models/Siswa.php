@@ -20,10 +20,16 @@ class Siswa extends Model
         'gender',
         'alamat',
         'wa',
-        'kelas',
+        'kelas_id', 
         'email',
         'foto'
     ];
+
+    // Relasi ke model Kelas
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas_id');
+    }
 
     // Jika tidak ingin menggunakan kolom created_at dan updated_at
     // public $timestamps = false;

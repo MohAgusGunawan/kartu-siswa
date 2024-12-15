@@ -96,36 +96,10 @@
             <div class="form-group">
                 <label for="kelas">Kelas</label>
                 <select class="form-control" id="kelas" name="kelas" required>
-                    <option value="X IPA A">X IPA A</option>
-                    <option value="X IPA B">X IPA B</option>
-                    <option value="X IPA C">X IPA C</option>
-                    <option value="X IPA D">X IPA D</option>
-                    <option value="X IPA E">X IPA E</option>
-                    <option value="X IPA F">X IPA F</option>
-                    <option value="X IPA G">X IPA G</option>
-                    <option value="X IPA H">X IPA H</option>
-                    <option value="X IPA I">X IPA I</option>
-                    <option value="X IPA J">X IPA J</option>
-                    <option value="XI IPA A">XI IPA A</option>
-                    <option value="XI IPA B">XI IPA B</option>
-                    <option value="XI IPA C">XI IPA C</option>
-                    <option value="XI IPA D">XI IPA D</option>
-                    <option value="XI IPA E">XI IPA E</option>
-                    <option value="XI IPA F">XI IPA F</option>
-                    <option value="XI IPA G">XI IPA G</option>
-                    <option value="XI IPA H">XI IPA H</option>
-                    <option value="XI IPS I">XI IPS I</option>
-                    <option value="XI IPS J">XI IPS J</option>
-                    <option value="XII IPA A">XII IPA A</option>
-                    <option value="XII IPA B">XII IPA B</option>
-                    <option value="XII IPA C">XII IPA C</option>
-                    <option value="XII IPA D">XII IPA D</option>
-                    <option value="XII IPA E">XII IPA E</option>
-                    <option value="XII IPA F">XII IPA F</option>
-                    <option value="XII IPA G">XII IPA G</option>
-                    <option value="XII IPA H">XII IPA H</option>
-                    <option value="XII IPS I">XII IPS I</option>
-                    <option value="XII IPS J">XII IPS J</option>
+                    <option value="" disabled selected>Pilih Kelas</option>
+                    @foreach ($kelas as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama_kelas }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="form-group">
@@ -146,7 +120,7 @@
         </form>
     </div>    
     
-    <div class="container mt-4">
+    {{-- <div class="container mt-4">
         <h4>Rekap Data Siswa per Kelas</h4>
         <table class="table table-bordered table-hover">
             <thead>
@@ -268,7 +242,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -276,6 +250,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/form.js') }}"></script>
     
-    @include('partial.data2')
+    {{-- @include('partial.data2') --}}
 </body>
 </html>

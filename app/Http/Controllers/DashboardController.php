@@ -14,32 +14,36 @@ use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
+use App\Models\Kelas;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            // $data = Siswa::all();
-            $data = Siswa::orderByRaw("id_card IS NULL OR id_card = '' DESC")->get();
-            $data = $data->map(function($item) {
-                return array_map('utf8_encode', $item->toArray());
+            $data = Siswa::with('kelas')->get(); // Memuat relasi kelas
+        
+            $data = $data->map(function ($item) {
+                $siswaData = $item->toArray();
+                $siswaData['kelas'] = $item->kelas ? $item->kelas->nama_kelas : null; // Tambahkan nama_kelas ke data siswa
+                return array_map('utf8_encode', $siswaData); // Tetap gunakan utf8_encode jika diperlukan
             });
-            // dd($data);
-
+        
             return Datatables::of($data)->make(true);
-        }
+        }        
         $kota = $this->getKota();
         $rekapKelas = DB::table('siswa')
-        ->select('kelas', DB::raw('count(*) as jumlah'))
-        ->groupBy('kelas')
-        ->orderBy('kelas', 'asc') 
+        ->join('kelas', 'siswa.kelas_id', '=', 'kelas.id') // Bergabung dengan tabel kelas
+        ->select('kelas.nama_kelas', DB::raw('count(*) as jumlah')) // Mengambil nama_kelas dan jumlah siswa
+        ->groupBy('kelas.nama_kelas') // Grup berdasarkan nama_kelas
+        ->orderBy('kelas.nama_kelas', 'asc') // Urutkan berdasarkan nama_kelas
         ->get();
 
-        $kelas = Siswa::select('kelas')->distinct()->orderBy('kelas')->get();
+        $kelas = Kelas::all();
+        $data = Siswa::all();
         $nis = Siswa::select('nis')->distinct()->orderBy('nis')->get();
 
-        return view('dashboard', compact('kota', 'rekapKelas', 'kelas', 'nis'));
+        return view('dashboard', compact('kota', 'data', 'rekapKelas', 'kelas', 'nis'));
 
     }
 
@@ -66,28 +70,48 @@ class DashboardController extends Controller
 
     public function downloadClassPdf(Request $request)
     {
-        $kelas = $request->query('kelas');
+        // Ambil parameter nama_kelas dari query
+        $namaKelas = $request->query('kelas');
 
-        if (!$kelas) {
+        // Validasi jika kelas tidak dipilih
+        if (!$namaKelas) {
             return back()->with('error', 'Silakan pilih kelas.');
         }
 
-        $dataSiswa = Siswa::where('kelas', $kelas)->get();
+        // Ambil id kelas berdasarkan nama_kelas
+        $kelas = Kelas::where('nama_kelas', $namaKelas)->first();
+
+        if (!$kelas) {
+            return back()->with('error', 'Kelas tidak ditemukan.');
+        }
+
+        $dataSiswa = Siswa::where('kelas_id', $kelas->id)->get();
+
+        // Cek apakah ada data siswa dalam kelas tersebut
+        if ($dataSiswa->isEmpty()) {
+            return back()->with('error', 'Tidak ada siswa dalam kelas ini.');
+        }
 
         // Initialize Mpdf
-        $mpdf = new Mpdf();
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => [88, 53.98], // Ukuran ID card dalam mm
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'orientation' => 'P'
+        ]);
 
-        // Load the view and pass data
+        // Load the view dan pass data ke view
         $pdfContent = view('reports.siswa_perkelas', [
             'dataSiswa' => $dataSiswa,
-            'kelas' => $kelas,
         ])->render();
 
-        // Write HTML content to Mpdf
+        // Tulis HTML ke Mpdf
         $mpdf->WriteHTML($pdfContent);
 
-        // Output PDF as download
-        return $mpdf->Output("Laporan_Kelas_{$kelas}.pdf", 'D'); // 'D' untuk download
+        // Output PDF untuk diunduh
+        return $mpdf->Output("Kartu_Siswa_Kelas_{$namaKelas}.pdf", 'D'); // 'D' untuk download
     }
 
     public function downloadCardPdf(Request $request)
@@ -161,22 +185,97 @@ class DashboardController extends Controller
         $tanggal_lahir = Carbon::createFromFormat('d F Y', $ttl[1])->format('Y-m-d');
         $kota = $this->getKota();
 
-        return view('dashboard.edit', compact('data', 'kota', 'tempat_lahir', 'tanggal_lahir'));
+        $kelas = Kelas::all();
+
+        return view('dashboard.edit', compact('data', 'kelas', 'kota', 'tempat_lahir', 'tanggal_lahir'));
     }
 
     public function update(Request $request, $id)
     {
-        // Validasi data
-        $validated = $request->validate([
-            'data' => 'required|string|max:255',
+        $data = Siswa::findOrFail($id);
+
+        // Validasi
+        $request->validate([
+            'nis' => 'required|integer',
+            'nama' => 'required|string|max:100',
+            'tempat_lahir' => 'required|string|max:100',
+            'tanggal_lahir' => 'required|date',
+            'gender' => 'required|in:Laki-laki,Perempuan',
+            'alamat' => 'required|string|max:50',
+            'wa' => 'required|string|max:20',
+            'kelas' => 'required|string|max:10',
+            'email' => 'required|email',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Update data berdasarkan ID
-        $item = Siswa::findOrFail($id);
-        $item->update(['id_card' => $validated['data']]);
+        // Update data
+        $tempatLahir = $request->tempat_lahir;
+        $tanggalLahir = Carbon::parse($request->tanggal_lahir)->translatedFormat('d F Y'); // Contoh: 09 Juli 2005
+        $ttl = $tempatLahir . ', ' . $tanggalLahir;
 
-        // Redirect dengan pesan sukses
-        return redirect()->route('dashboard.index')->with('success', 'Data updated successfully.');
+        $data->update([
+            'nis' => $request->nis,
+            'nama' => strtoupper($request->nama),
+            'ttl' => $ttl,  
+            'gender' => $request->gender,
+            'alamat' => $request->alamat,
+            'wa' => $request->wa,
+            'kelas' => $request->kelas,
+            'email' => $request->email,
+        ]);
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($data->foto) {
+                Storage::disk('public')->delete('images/siswa/' . $data->foto);
+            }
+        
+            $foto = $request->file('foto');
+            $originalPath = $foto->getRealPath();
+            $extension = $foto->getClientOriginalExtension();
+        
+            // Ukuran target (4x6 cm = 435x581 pixel)
+            $targetWidth = 435;
+            $targetHeight = 581;
+        
+            // Buat gambar dari file yang diupload
+            if ($extension === 'jpeg' || $extension === 'jpg') {
+                $sourceImage = imagecreatefromjpeg($originalPath);
+            } elseif ($extension === 'png') {
+                $sourceImage = imagecreatefrompng($originalPath);
+            } else {
+                return response()->json(['error' => 'Format gambar tidak didukung. Gunakan JPEG atau PNG.']);
+            }
+        
+            // Buat canvas baru untuk ukuran target
+            $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
+        
+            // Resize gambar
+            imagecopyresampled(
+                $resizedImage,
+                $sourceImage,
+                0, 0, 0, 0,
+                $targetWidth, $targetHeight,
+                imagesx($sourceImage), imagesy($sourceImage)
+            );
+        
+            // Nama file unik
+            $fileName = uniqid() . '.jpg';
+            $savePath = storage_path('app/public/images/siswa/') . $fileName;
+        
+            // Simpan gambar ke file
+            imagejpeg($resizedImage, $savePath, 75); // Kompresi 75%
+        
+            // Simpan nama file baru ke database
+            $data->foto = $fileName;
+            $data->save();
+        
+            // Bersihkan memori
+            imagedestroy($sourceImage);
+            imagedestroy($resizedImage);
+        }        
+
+        return redirect()->route('dashboard.index')->with('success', 'Data Siswa berhasil diupdate 👍');
     }
 
     public function destroy($id)
