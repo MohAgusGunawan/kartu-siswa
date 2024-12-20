@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Input Siswa</title>
+    <link rel="icon" type="image/png" href="{{ asset('storage/images/logo/logo.jpg') }}" sizes="16x16" />
     <!-- Tambahkan CSS Bootstrap atau custom CSS sesuai kebutuhan -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -141,9 +142,9 @@
                 @endforeach
             </tbody>
         </table>
-    </div>   
+    </div>    --}}
 
-    <div class="container d-flex justify-content-center align-items-center">
+    {{-- <div class="container d-flex justify-content-center align-items-center">
         <div class="table-container">
             <div class="head d-flex justify-content-between align-items-center mb-2">
                 <h4 class="mb-0">Data Siswa</h4>
@@ -216,7 +217,7 @@
             </div>
         </div>
     </div>    
-</div>
+</div> --}}
 
 <!--<div class="container mt-5">-->
         <div class="d-flex justify-content-center align-items-center">
@@ -230,7 +231,7 @@
         <br>
     <!--</div>-->
 
-    <div class="modal fade" id="modalImage" tabindex="-1" aria-labelledby="modalImageLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="modalImage" tabindex="-1" aria-labelledby="modalImageLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -250,6 +251,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/form.js') }}"></script>
     
-    {{-- @include('partial.data2') --}}
+    @include('partial.data2')
 </body>
 </html>

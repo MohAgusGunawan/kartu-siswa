@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin</title>
+    <link rel="icon" type="image/png" href="{{ asset('storage/images/logo/logo.jpg') }}" sizes="16x16" />
+
     <!-- Tambahkan CSS Bootstrap atau custom CSS sesuai kebutuhan -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -137,7 +139,7 @@
 </div>
 
 <!--<div class="container mt-5">-->
-        <div class="d-flex justify-content-center align-items-center">
+        {{-- <div class="d-flex justify-content-center align-items-center">
             <div class="text-center">
                 <h5>Butuh bantuan?</h5>
                 <a href="https://wa.me/6281358750738?text=Halo,%20aku%20butuh%20bantuan" class="btn btn-success" target="_blank">
@@ -145,7 +147,7 @@
                 </a>
             </div>
         </div>
-        <br>
+        <br> --}}
     <!--</div>-->
 
     <div class="modal fade" id="modalImage" tabindex="-1" aria-labelledby="modalImageLabel" aria-hidden="true">

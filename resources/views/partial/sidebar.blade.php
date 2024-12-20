@@ -11,6 +11,14 @@
                         </span>
                     </a>
                 </li>
+                <li class="has-subnav">
+                    <a href="{{ route('kelas.index') }}">
+                        <i class="fa-solid fa-list fa-2x"></i>
+                        <span class="nav-text">
+                            Kelas
+                        </span>
+                    </a>
+                </li>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>

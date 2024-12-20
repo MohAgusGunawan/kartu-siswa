@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Dashboard</title>
+  <link rel="icon" type="image/png" href="{{ asset('storage/images/logo/logo.jpg') }}" sizes="16x16" />
   <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 

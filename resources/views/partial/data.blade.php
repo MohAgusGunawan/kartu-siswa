@@ -47,7 +47,7 @@
                     render: function(data, type, row, meta) {
                         return data + 
                             ' <button type="button" class="btn btn-primary btn-sm btn-icon-text edit-btn" data-id="' + 
-                            row.id + '" data-value="' + data + '">Edit</button>';
+                            row.id + '" data-value="' + data + '"><i class="fa-solid fa-pen-to-square"></i></button>';
                     }
                 },
                 {
@@ -102,8 +102,8 @@
                     orderable: false,
                     searchable: false,
                     render: function (data, type, row, meta) {
-                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary">Edit</a>' +
-                            ' <button type="button" class="btn btn-danger delete-btn" data-id="' + row.id + '">Delete</button>';
+                        return '<a href="/form/' + row.id + '/edit" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>' +
+                            ' <button type="button" class="btn btn-danger delete-btn" data-id="' + row.id + '"><i class="fa-solid fa-trash"></i></button>';
                     }
                 }
             ],

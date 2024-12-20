@@ -36,6 +36,10 @@ class CreateSiswasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('siswa');
+        Schema::table('siswa', function (Blueprint $table) {
+            $table->foreign('kelas_id')
+                  ->references('id')->on('kelas')
+                  ->onDelete('set null'); // Foreign key akan menjadi NULL
+        });        
     }
 }

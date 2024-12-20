@@ -5,6 +5,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MigrateController;
+use App\Http\Controllers\KelasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware('auth:pengguna')->group(function () {
     Route::resource('dashboard', DashboardController::class);
     Route::put('/route/update/{id}', [DashboardController::class, 'update'])->name('route.update');
+    Route::get('/kelas', [KelasController::class, 'index'])->name('kelas.index');
+    Route::get('/kelas/data', [KelasController::class, 'getKelasData'])->name('kelas.data');
+    Route::post('/kelas', [KelasController::class, 'store'])->name('kelas.store');
+    Route::put('/kelas/{id}', [KelasController::class, 'update'])->name('kelas.update');
+    Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])->name('kelas.destroy');
 });
 /*
 |--------------------------------------------------------------------------
