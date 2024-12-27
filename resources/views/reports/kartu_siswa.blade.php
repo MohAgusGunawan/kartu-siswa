@@ -16,17 +16,18 @@
             background-color: #f5f5f5;
         }
         .card-container {
-            width: 90mm; /* Panjang */
+            width: 85.6mm; /* Panjang */
             height: 53.98mm; /* Lebar */
             /* position: absolute; */
-            /* flex: 1;
-            align-items: flex-end; */
-            background: url('{{ asset("storage/images/siswa/depan1.jpg") }}') no-repeat right;
+            background: url('{{ asset("storage/images/siswa/depan1.jpg") }}') no-repeat center;
             background-size: cover;
-            border: 0.001px solid white;
-            /* border-radius: 10px; */
+            border: 1px solid #ccc;
+            border-radius: 10px;
             /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
             overflow: hidden;
+        }
+        .card-container:not(:last-child) {
+            page-break-after: always; /* Tambahkan pemisahan hanya jika bukan elemen terakhir */
         }
         .photo {
             /* position: absolute; */
@@ -38,7 +39,6 @@
             /* overflow: hidden; */
             border: 1px solid #ccc;
             /* margin-top: 75px; */
-            /* border: none !important; */
         }
         /* .photo img {
             width: 100%;

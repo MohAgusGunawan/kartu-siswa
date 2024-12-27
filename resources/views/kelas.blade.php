@@ -7,7 +7,7 @@
     <table id="kelasTable" class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>No</th>
                 <th>Nama Kelas</th>
                 <th>Aksi</th>
             </tr>
@@ -49,7 +49,13 @@
             serverSide: true,
             ajax: '{{ route("kelas.data") }}',
             columns: [
-                { data: 'id', name: 'id' },
+                { 
+                    data: null, 
+                    name: 'nomor',
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                },
                 { data: 'nama_kelas', name: 'nama_kelas' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
