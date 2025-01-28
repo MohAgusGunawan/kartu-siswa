@@ -30,6 +30,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
 }
 ?>
 
+<style>
+    /* Gunakan Flexbox untuk memusatkan elemen */
+    body {
+      margin: 0;
+      height: 100vh; /* Tinggi penuh viewport */
+      display: flex;
+      justify-content: center; /* Pusatkan horizontal */
+      align-items: center; /* Pusatkan vertikal */
+      background-color: #f0f0f0; /* Warna latar belakang */
+    }
+
+    /* Styling tambahan untuk widget Turnstile */
+    .cf-turnstile {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+
+<body>
 <!-- Widget Turnstile -->
 <div id="turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAA6j75MpRvhSaHTH"></div>
 
@@ -68,3 +89,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
 </script>
 
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</body>
