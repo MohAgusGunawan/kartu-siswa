@@ -23,7 +23,10 @@ use App\Http\Controllers\KelasController;
 | Halaman Form
 |--------------------------------------------------------------------------
 */
-Route::get('/', [FormController::class, 'index'])->name('form.index');
+Route::get('/', function () {
+    return view('captcha');
+});
+Route::get('/form-page', [FormController::class, 'index'])->name('form.index');
 /*
 |--------------------------------------------------------------------------
 | Halaman API Siswa
