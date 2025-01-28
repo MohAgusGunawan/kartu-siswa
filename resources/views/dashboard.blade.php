@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin</title>
-    <link rel="icon" type="image/png" href="{{ asset('storage/images/logo/logo.jpg') }}" sizes="16x16" />
+    <link rel="icon" type="image/png" href="{{ asset('storage/app/public/images/logo/logo.jpg') }}" sizes="16x16" />
 
     <!-- Tambahkan CSS Bootstrap atau custom CSS sesuai kebutuhan -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">

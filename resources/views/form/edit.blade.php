@@ -50,8 +50,12 @@
             
             <div class="form-group">
                 <label for="tanggal_lahir">Tanggal Lahir</label>
-                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir', $tanggal_lahir) }}" onfocus="this.showPicker()" required>
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" onfocus="this.showPicker()" required>
             </div>
+            
+            <script>
+                document.getElementById('tanggal_lahir').max = new Date(new Date().setFullYear(new Date().getFullYear() - 15)).toISOString().split('T')[0];
+            </script>
             
             <div class="form-group">
                 <label>Jenis Kelamin</label><br>
@@ -99,7 +103,7 @@
                     <input type="file" class="custom-file-input" id="foto" name="foto" accept=".jpg, .jpeg, .png" onchange="previewImage(event)">
                     <label class="custom-file-label" for="foto">Choose file</label>
                 </div>
-                <img id="img-preview" src="{{ asset('storage/images/siswa/' . $data->foto) }}" alt="Foto Pelajar" class="img-thumbnail img-preview mt-2">
+                <img id="img-preview" src="{{ asset('storage/app/public/images/siswa/' . $data->foto) }}" alt="Foto Pelajar" class="img-thumbnail img-preview mt-2">
             </div>            
 
             <button type="submit" class="btn btn-primary">Update</button>

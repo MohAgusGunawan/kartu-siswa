@@ -21,7 +21,7 @@ class MigrateController extends Controller
                 'alamat' => $siswa->alamat,
                 'gender' => $siswa->gender,
                 'id_card' => $siswa->id_card,
-                'foto' => asset("storage/images/siswa/{$siswa->foto}")
+                'foto' => asset("storage/app/public/images/siswa/{$siswa->foto}")
             ];
         });
     

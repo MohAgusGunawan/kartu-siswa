@@ -19,7 +19,7 @@
             width: 85.6mm; /* Panjang */
             height: 53.98mm; /* Lebar */
             /* position: absolute; */
-            background: url('{{ asset("storage/images/siswa/depan1.jpg") }}') no-repeat center;
+            background: url('{{ asset("storage/app/public/images/siswa/depan1.jpg") }}') no-repeat center;
             background-size: cover;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -68,7 +68,7 @@
                 <!-- Kolom Kiri: Foto -->
                 <td style="width: 30%; vertical-align: top; text-align: left; padding-left: 5px;">
                     <div class="photo" style="width: 100%; height: auto; text-align: center;">
-                        <img src="{{ asset('storage/images/siswa/' . $siswa->foto) }}" 
+                        <img src="{{ asset('storage/app/public/images/siswa/' . $siswa->foto) }}" 
                              alt="Foto Siswa" 
                              style="width: 80px; height: 100px; object-fit: cover;">
                     </div>
