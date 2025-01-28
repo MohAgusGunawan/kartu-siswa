@@ -31,22 +31,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
 ?>
 
 <style>
-    /* Gunakan Flexbox untuk memusatkan elemen */
+    /* Reset margin dan padding */
     body {
       margin: 0;
+      padding: 0;
       height: 100vh; /* Tinggi penuh viewport */
       display: flex;
       justify-content: center; /* Pusatkan horizontal */
       align-items: center; /* Pusatkan vertikal */
       background-color: #f0f0f0; /* Warna latar belakang */
+      font-family: Arial, sans-serif; /* Font default */
     }
 
-    /* Styling tambahan untuk widget Turnstile */
-    .cf-turnstile {
+    /* Container untuk CAPTCHA */
+    .captcha-container {
       background-color: white;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center; /* Pusatkan teks */
+      max-width: 90%; /* Lebar maksimum di mobile */
+      width: 100%; /* Lebar penuh di desktop */
+    }
+
+    /* Styling untuk widget Turnstile */
+    .cf-turnstile {
+      margin: 0 auto; /* Pusatkan widget */
+    }
+
+    /* Media query untuk perangkat mobile */
+    @media (max-width: 600px) {
+      .captcha-container {
+        padding: 15px; /* Padding lebih kecil di mobile */
+      }
+
+      .cf-turnstile {
+        transform: scale(0.9); /* Perkecil widget di mobile */
+      }
     }
   </style>
 
