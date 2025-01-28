@@ -297,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
       .then(response => response.text())
       .then(() => {
         // Refresh halaman untuk menampilkan pesan status
-        window.location.reload();
+        // window.location.reload();
       })
       .catch(error => {
         console.error('Error:', error);
