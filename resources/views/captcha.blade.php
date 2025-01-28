@@ -58,17 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     .cf-turnstile {
       margin: 0 auto; /* Pusatkan widget */
     }
-
-    /* Media query untuk perangkat mobile */
-    @media (max-width: 600px) {
-      .captcha-container {
-        padding: 15px; /* Padding lebih kecil di mobile */
-      }
-
-      .cf-turnstile {
-        transform: scale(0.9); /* Perkecil widget di mobile */
-      }
-    }
   </style>
 
 <body>

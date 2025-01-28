@@ -26,7 +26,7 @@ use App\Http\Controllers\KelasController;
 Route::get('/', function () {
     return view('captcha');
 });
-Route::get('/form-page', [FormController::class, 'index'])->name('form.index');
+Route::get('/form', [FormController::class, 'index'])->name('form.index');
 /*
 |--------------------------------------------------------------------------
 | Halaman API Siswa
