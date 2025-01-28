@@ -27,9 +27,9 @@
       <div class="inputBx">
         <input type="submit" value="Masuk">
       </div>
-      <div class="links">
+      {{-- <div class="links">
         <a href="#">Lupa Password?</a>
-      </div>
+      </div> --}}
     </div>
   </div>
 </form>

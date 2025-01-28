@@ -48,17 +48,19 @@ class MigrateController extends Controller
                 // Tentukan tanggal kedaluwarsa (1 tahun dari sekarang)
                 $expireDate = now()->addYear()->format('Y-m-d');
 
-                // Masukkan data ke tabel SLiMS
-                DB::connection('slims')->table('member')->insert([
-                    'member_id' => $siswa->nis,
-                    'member_name' => $siswa->nama,
-                    'gender' => $gender,
-                    'birth_date' => $birthDate,
-                    'member_address' => $siswa->alamat,
-                    'member_image' => $memberImage,
-                    'pin' => $siswa->id_card,
-                    'expire_date' => $expireDate,
-                ]);
+                // Gunakan updateOrInsert untuk update jika member_id ada, atau insert jika tidak ada
+                DB::connection('slims')->table('member')->updateOrInsert(
+                    ['member_id' => $siswa->nis], // Kondisi pencarian
+                    [
+                        'member_name' => $siswa->nama,
+                        'gender' => $gender,
+                        'birth_date' => $birthDate,
+                        'member_address' => $siswa->alamat,
+                        'member_image' => $memberImage,
+                        'pin' => $siswa->id_card,
+                        'expire_date' => $expireDate,
+                    ]
+                );
             }
 
             return response()->json(['message' => 'Migrasi data berhasil!'], 200);

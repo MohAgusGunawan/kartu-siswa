@@ -80,6 +80,7 @@ class FormController extends Controller
         ]);
 
         $siswa = new Siswa();
+        $siswa->id_card = '';
         $siswa->nis = $request->nis;
         $siswa->nama = strtoupper($request->nama);
         
@@ -90,7 +91,7 @@ class FormController extends Controller
         $siswa->gender = $request->gender;
         $siswa->alamat = $request->alamat;
         $siswa->wa = $request->wa;
-        $siswa->kelas = $request->kelas;
+        $siswa->kelas_id = $request->kelas;
         $siswa->email = $request->email;
 
         // Jika ada file foto yang di-upload

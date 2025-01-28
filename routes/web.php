@@ -32,6 +32,7 @@ Route::get('/', [FormController::class, 'index'])->name('form.index');
 Route::get('/data-siswa', function () {
     return view('data-siswa');
 });
+Route::get('/api/siswa', [MigrateController::class, 'index']);
 Route::get('/migrate-data', function () {
     return view('migrate-data');
 });
