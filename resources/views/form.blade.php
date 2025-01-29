@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
 
     if ($result->success) {
         $statusMessage = "Anda adalah manusia!";
-        $hideCaptcha = true; // Set untuk menyembunyikan CAPTCHA
+        $hideCaptcha = true;
     } else {
         $statusMessage = "Verifikasi gagal. Silakan coba lagi.";
     }
@@ -185,31 +185,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     </div>
     
     <script>
-        // Fungsi untuk menangani respons Turnstile
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('img-preview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    
         function handleTurnstileCallback(token) {
-            // Kirim token ke backend untuk validasi
             fetch(window.location.href, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `token=${encodeURIComponent(token)}`,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `token=${encodeURIComponent(token)}`
             })
             .then(response => response.text())
-            .then(html => {
-                // Ganti konten halaman dengan respons backend
-                document.body.innerHTML = html;
-            })
+            .then(html => { document.body.innerHTML = html; })
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('status-message').textContent = "Terjadi kesalahan. Silakan refresh halaman.";
             });
         }
     
-        // Tambahkan event listener untuk menerima token dari Turnstile
         window.onload = function() {
             turnstile.render('#turnstile-widget', {
-                sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
+                sitekey: '0x4AAAAAAA6j75MpRvhSaHTH',
                 callback: handleTurnstileCallback,
             });
         };
