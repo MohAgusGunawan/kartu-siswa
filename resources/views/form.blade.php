@@ -28,10 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     if ($result->success) {
         $statusMessage = "Anda adalah manusia!";
         $hideCaptcha = true; // Set untuk menyembunyikan CAPTCHA
-        error_log("CAPTCHA sukses: " . $statusMessage); // Log pesan sukses
     } else {
         $statusMessage = "Verifikasi gagal. Silakan coba lagi.";
-        error_log("CAPTCHA gagal: " . $statusMessage); // Log pesan gagal
     }
 }
 ?>
@@ -176,7 +174,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <!--</div>-->
 
     <div class="captcha-container">
-        {{-- @include('captcha') --}}
         <!-- Tampilkan CAPTCHA jika belum diverifikasi -->
         <?php if (!$hideCaptcha): ?>
             <div id="turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAA6j75MpRvhSaHTH"></div>
@@ -195,11 +192,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: token=${encodeURIComponent(token)},
+                body: `token=${encodeURIComponent(token)}`,
             })
             .then(response => response.text())
             .then(html => {
-                console.log("Respons dari backend:", html);
                 // Ganti konten halaman dengan respons backend
                 document.body.innerHTML = html;
             })
