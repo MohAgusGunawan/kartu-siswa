@@ -217,7 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
                 const widgetContainer = document.getElementById('turnstile-widget');
                 if (widgetContainer && !widgetContainer.hasChildNodes()) {
                     turnstile.render('#turnstile-widget', {
-                        sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
+                        sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Pastikan Site Key yang benar
                         callback: handleTurnstileCallback,
                     });
                 }
