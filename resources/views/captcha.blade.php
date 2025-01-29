@@ -1,35 +1,73 @@
 <?php
-// Proses validasi Turnstile di backend
-$statusMessage = "";
-$hideCaptcha = false;
+require 'vendor/autoload.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
-    $secretKey = "0x4AAAAAAA6j7_uuC4IiGCFHKgjuWg7g6ZQ"; // Ganti dengan Secret Key Anda
-    $token = $_POST['token'];
+// Include Google Cloud dependencies using Composer
+use Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient;
+use Google\Cloud\RecaptchaEnterprise\V1\Event;
+use Google\Cloud\RecaptchaEnterprise\V1\Assessment;
+use Google\Cloud\RecaptchaEnterprise\V1\TokenProperties\InvalidReason;
 
-    $url = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-    $data = [
-        'secret' => $secretKey,
-        'response' => $token,
-    ];
+/**
+  * Create an assessment to analyze the risk of a UI action.
+  * @param string $recaptchaKey The reCAPTCHA key associated with the site/app
+  * @param string $token The generated token obtained from the client.
+  * @param string $project Your Google Cloud Project ID.
+  * @param string $action Action name corresponding to the token.
+  */
+function create_assessment(
+  string $recaptchaKey,
+  string $token,
+  string $project,
+  string $action
+): void {
+  // Create the reCAPTCHA client.
+  // TODO: Cache the client generation code (recommended) or call client.close() before exiting the method.
+  $client = new RecaptchaEnterpriseServiceClient();
+  $projectName = $client->projectName($project);
 
-    $options = [
-        'http' => [
-            'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method' => 'POST',
-            'content' => http_build_query($data),
-        ],
-    ];
+  // Set the properties of the event to be tracked.
+  $event = (new Event())
+    ->setSiteKey($recaptchaKey)
+    ->setToken($token);
 
-    $context = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
-    $result = json_decode($result);
+  // Build the assessment request.
+  $assessment = (new Assessment())
+    ->setEvent($event);
 
-    if ($result->success) {
-        $statusMessage = "Anda adalah manusia!";
-        $hideCaptcha = true; // Set untuk menyembunyikan CAPTCHA
-    } else {
-        $statusMessage = "Verifikasi gagal. Silakan coba lagi.";
+  try {
+    $response = $client->createAssessment(
+      $projectName,
+      $assessment
+    );
+
+    // Check if the token is valid.
+    if ($response->getTokenProperties()->getValid() == false) {
+      printf('The CreateAssessment() call failed because the token was invalid for the following reason: ');
+      printf(InvalidReason::name($response->getTokenProperties()->getInvalidReason()));
+      return;
     }
+
+    // Check if the expected action was executed.
+    if ($response->getTokenProperties()->getAction() == $action) {
+      // Get the risk score and the reason(s).
+      // For more information on interpreting the assessment, see:
+      // https://cloud.google.com/recaptcha-enterprise/docs/interpret-assessment
+      printf('The score for the protection action is:');
+      printf($response->getRiskAnalysis()->getScore());
+    } else {
+      printf('The action attribute in your reCAPTCHA tag does not match the action you are expecting to score');
+    }
+  } catch (exception $e) {
+    printf('CreateAssessment() call failed with the following error: ');
+    printf($e);
+  }
 }
+
+// TODO: Replace the token and reCAPTCHA action variables before running the sample.
+create_assessment(
+   '6LfwTsYqAAAAAD65-dEr8EFSJv8TQX1oNLE5ma0C',
+   'YOUR_USER_RESPONSE_TOKEN',
+   'my-project-69759-1738124798165',
+   'YOUR_RECAPTCHA_ACTION'
+);
 ?>
