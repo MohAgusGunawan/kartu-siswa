@@ -213,13 +213,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     
         // Pastikan Turnstile API sudah dimuat sebelum render
         document.addEventListener("DOMContentLoaded", function () {
-                const widgetContainer = document.getElementById('turnstile-widget');
-                if (widgetContainer && !widgetContainer.hasChildNodes()) {
-                    turnstile.render('#turnstile-widget', {
-                        sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Pastikan Site Key yang benar
-                        callback: handleTurnstileCallback,
-                    });
-                }
+            const widgetContainer = document.getElementById('turnstile-widget');
+            if (widgetContainer && !widgetContainer.hasChildNodes()) {
+                turnstile.render('#turnstile-widget', {
+                    sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Pastikan Site Key yang benar
+                    callback: handleTurnstileCallback,
+                });
+                console.log('Turnstile widget rendered');
+            }
+            document.getElementById('turnstile-widget').style.display = 'none';
         });
     </script>    
 
