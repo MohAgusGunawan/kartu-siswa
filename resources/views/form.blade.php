@@ -219,10 +219,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
                     sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Pastikan Site Key yang benar
                     callback: handleTurnstileCallback,
                 });
-                console.log('Turnstile widget rendered');
             }
-            document.getElementById('turnstile-widget').style.display = 'none';
         });
+        document.getElementById('turnstile-widget').style.display = 'none';
     </script>    
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
