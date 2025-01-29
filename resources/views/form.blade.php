@@ -216,7 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
                     callback: handleTurnstileCallback,
                 });
             }
-        });
+        }, { once: true });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
