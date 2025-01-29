@@ -275,7 +275,7 @@ class DashboardController extends Controller
             imagedestroy($resizedImage);
         }        
 
-        return redirect()->route('dashboard.index')->with('success', 'Data Siswa berhasil diupdate 👍');
+        return back()->with('success', 'Data Siswa berhasil diupdate 👍');
     }
 
     public function destroy($id)

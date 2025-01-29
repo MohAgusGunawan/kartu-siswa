@@ -10,10 +10,33 @@
     <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
     <!-- Include Select2 CSS CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="container">
         <h2>Edit Data Siswa</h2>
+
+        @if(Session::has('success'))
+      <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: 'success',
+              title: '{{ Session::get('success') }}'
+            });
+          });
+      </script>
+  @endif
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -25,7 +48,7 @@
             </div>
         @endif
 
-        <form action="{{ route('dashboard.update', $data->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('form.update', $data->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -51,7 +74,7 @@
             
             <div class="form-group">
                 <label for="tanggal_lahir">Tanggal Lahir</label>
-                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" onfocus="this.showPicker()" required>
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir', \Carbon\Carbon::parse(explode(',', $data->ttl)[1] ?? now())->format('Y-m-d')) }}" onfocus="this.showPicker()" required>
             </div>
             
             <script>
@@ -82,13 +105,14 @@
             
             <div class="form-group">
                 <label for="kelas">Kelas</label>
+                {{-- {{ dd($data->kelas_id, old('kelas')) }} --}}
                 <select class="form-control" id="kelas" name="kelas" required>
                     <option value="" disabled selected>Pilih Kelas</option>
                     @foreach ($kelas as $item)
-                        <option value="{{ $item->id }}" 
-                            @if(old('kelas', $data->kelas_id) == $item->id) selected @endif>
-                            {{ $item->nama_kelas }}
-                        </option>
+                    <option value="{{ $item->id }}" 
+                        {{ old('kelas', isset($data) ? $data->kelas_id : '') == $item->id ? 'selected' : '' }}>
+                        {{ $item->nama_kelas }}
+                    </option>                    
                     @endforeach
                 </select>                
             </div>

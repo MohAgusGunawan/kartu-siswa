@@ -345,7 +345,7 @@ class FormController extends Controller
             'gender' => $request->gender,
             'alamat' => $request->alamat,
             'wa' => $request->wa,
-            'kelas' => $request->kelas,
+            'kelas_id' => $request->kelas,
             'email' => $request->email,
         ]);
 
@@ -400,7 +400,7 @@ class FormController extends Controller
             imagedestroy($resizedImage);
         }        
 
-        return redirect()->route('form.index')->with('success', 'Data Siswa berhasil diupdate 👍');
+        return back()->with('success', 'Data Siswa berhasil diupdate 👍');
     }
 
     public function destroy($id)
