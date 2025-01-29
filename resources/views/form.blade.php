@@ -183,6 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     </div>
     
     <script>
+        let turnstileRendered = false;
         // Fungsi untuk menangani respons Turnstile
         function handleTurnstileCallback(token) {
             fetch(window.location.href, {
@@ -210,14 +211,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
         }
     
         // Tambahkan event listener untuk menerima token dari Turnstile
-        window.onload = function() {
-            if (!document.getElementById('turnstile-widget').hasChildNodes()) {
-                turnstile.render('#turnstile-widget', {
-                    sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
-                    callback: handleTurnstileCallback,
-                });
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!turnstileRendered) {
+                const widgetContainer = document.getElementById('turnstile-widget');
+                if (widgetContainer && widgetContainer.childNodes.length === 0) {
+                    turnstile.render('#turnstile-widget', {
+                        sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
+                        callback: handleTurnstileCallback,
+                    });
+                    turnstileRendered = true; // Menandai bahwa widget sudah dirender
+                }
             }
-        };
+        }, { once: true });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
