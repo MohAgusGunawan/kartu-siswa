@@ -39,7 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Input Siswa</title>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <link rel="icon" type="image/png" href="{{ asset('storage/app/public/images/logo/logo.jpg') }}" sizes="16x16" />
     <!-- Tambahkan CSS Bootstrap atau custom CSS sesuai kebutuhan -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -49,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <link rel="stylesheet" href="{{ asset('css/form.css') }}">
     <!-- Include Select2 CSS CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     @if(Session::has('success'))
