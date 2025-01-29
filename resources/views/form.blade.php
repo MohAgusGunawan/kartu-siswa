@@ -209,7 +209,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     
         // Tambahkan event listener untuk menerima token dari Turnstile
         document.addEventListener("DOMContentLoaded", function () {
-            if (!document.getElementById('turnstile-widget').hasChildNodes()) {
+            const widgetContainer = document.getElementById('turnstile-widget');
+            if (widgetContainer && !widgetContainer.hasChildNodes()) {
+                console.log("Rendering Turnstile...");
                 turnstile.render('#turnstile-widget', {
                     sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
                     callback: handleTurnstileCallback,
