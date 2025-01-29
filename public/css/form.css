@@ -154,7 +154,7 @@ td {
     overflow-x: auto;
 } */
 
-.captcha-container {
+#captchaContainer {
     /* background-color: white; */
     padding: 20px;
     text-align: center;

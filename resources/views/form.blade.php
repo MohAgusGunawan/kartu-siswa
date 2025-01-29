@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('css/form.css') }}">
     <!-- Include Select2 CSS CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfwTsYqAAAAAD65-dEr8EFSJv8TQX1oNLE5ma0C"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     @if(Session::has('success'))
@@ -138,14 +138,22 @@
         <br>
     <!--</div>-->
 
+    <div class="d-flex justify-content-center align-items-center" id="captchaContainer">
+        <div class="text-center">
+            <h5>Verifikasi reCAPTCHA untuk melanjutkan</h5>
+            <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY" data-callback="enableForm"></div>
+        </div>
+    </div>
+
     <script>
-        function onClick(e) {
-          e.preventDefault();
-          grecaptcha.enterprise.ready(async () => {
-            const token = await grecaptcha.enterprise.execute('6LfwTsYqAAAAAD65-dEr8EFSJv8TQX1oNLE5ma0C', {action: 'LOGIN'});
-          });
+        function enableForm() {
+            // Hapus reCAPTCHA setelah berhasil
+            document.getElementById('captchaContainer').style.display = 'none';
+            
+            // Aktifkan form
+            document.getElementById('formInput').disabled = false;
         }
-      </script>
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
