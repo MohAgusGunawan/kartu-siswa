@@ -48,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <link rel="stylesheet" href="{{ asset('css/form.css') }}">
     <!-- Include Select2 CSS CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
@@ -210,17 +211,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
             });
         }
     
-        // Tambahkan event listener untuk menerima token dari Turnstile
+        // Pastikan Turnstile API sudah dimuat sebelum render
         document.addEventListener("DOMContentLoaded", function () {
-            const widgetContainer = document.getElementById('turnstile-widget');
-            if (widgetContainer && !widgetContainer.hasChildNodes()) {
-                turnstile.render('#turnstile-widget', {
-                    sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
-                    callback: handleTurnstileCallback,
-                });
+            if (typeof turnstile !== 'undefined') {
+                const widgetContainer = document.getElementById('turnstile-widget');
+                if (widgetContainer && !widgetContainer.hasChildNodes()) {
+                    turnstile.render('#turnstile-widget', {
+                        sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
+                        callback: handleTurnstileCallback,
+                    });
+                }
+            } else {
+                console.error('Turnstile API tidak terdefinisi.');
             }
         });
-    </script>
+    </script>    
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
