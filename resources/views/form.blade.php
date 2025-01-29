@@ -176,6 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <!--</div>-->
 
     <div class="captcha-container">
+        {{-- @include('captcha') --}}
         <!-- Tampilkan CAPTCHA jika belum diverifikasi -->
         <?php if (!$hideCaptcha): ?>
             <div id="turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAA6j75MpRvhSaHTH"></div>
@@ -188,17 +189,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <script>
         // Fungsi untuk menangani respons Turnstile
         function handleTurnstileCallback(token) {
+            // Kirim token ke backend untuk validasi
             fetch(window.location.href, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `token=${encodeURIComponent(token)}`,
+                body: token=${encodeURIComponent(token)},
             })
             .then(response => response.text())
             .then(html => {
-                console.log("Respons dari backend:", html); // Log respons dari backend
-                document.getElementById('status-message').innerHTML = html;
+                console.log("Respons dari backend:", html);
+                // Ganti konten halaman dengan respons backend
+                document.body.innerHTML = html;
             })
             .catch(error => {
                 console.error('Error:', error);
