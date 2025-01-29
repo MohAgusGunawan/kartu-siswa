@@ -154,6 +154,25 @@ td {
     overflow-x: auto;
 } */
 
+.captcha-container {
+    /* background-color: white; */
+    padding: 20px;
+    text-align: center;
+    max-width: 90%;
+    width: 100%;
+    position: absolute;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin-top: -1250px;
+}
+
+.cf-turnstile {
+    margin: 0 auto;
+}
+
 @media (max-width: 785px) {
     .container {
         width: 100%;

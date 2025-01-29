@@ -1,5 +1,8 @@
 <?php
 // Proses validasi Turnstile di backend
+$statusMessage = "";
+$hideCaptcha = false;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     $secretKey = "0x4AAAAAAA6j7_uuC4IiGCFHKgjuWg7g6ZQ"; // Ganti dengan Secret Key Anda
     $token = $_POST['token'];
@@ -24,79 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
 
     if ($result->success) {
         $statusMessage = "Anda adalah manusia!";
+        $hideCaptcha = true; // Set untuk menyembunyikan CAPTCHA
     } else {
         $statusMessage = "Verifikasi gagal. Silakan coba lagi.";
     }
 }
 ?>
-
-<style>
-    /* Reset margin dan padding */
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh; /* Tinggi penuh viewport */
-      display: flex;
-      justify-content: center; /* Pusatkan horizontal */
-      align-items: center; /* Pusatkan vertikal */
-      background-color: #f0f0f0; /* Warna latar belakang */
-      font-family: Arial, sans-serif; /* Font default */
-    }
-
-    /* Container untuk CAPTCHA */
-    .captcha-container {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      text-align: center; /* Pusatkan teks */
-      max-width: 90%; /* Lebar maksimum di mobile */
-      width: 100%; /* Lebar penuh di desktop */
-    }
-
-    /* Styling untuk widget Turnstile */
-    .cf-turnstile {
-      margin: 0 auto; /* Pusatkan widget */
-    }
-  </style>
-
-<body>
-<!-- Widget Turnstile -->
-<div id="turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAA6j75MpRvhSaHTH"></div>
-
-<!-- Pesan status -->
-<p id="status-message"><?php echo $statusMessage ?? ''; ?></p>
-
-<script>
-  // Fungsi untuk menangani respons Turnstile
-  function handleTurnstileCallback(token) {
-    // Kirim token ke backend untuk validasi
-    fetch(window.location.href, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `token=${encodeURIComponent(token)}`,
-    })
-    .then(response => response.text())
-    .then(() => {
-      // Refresh halaman untuk menampilkan pesan status
-      window.location.href = "{{ route('form.index') }}";
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      document.getElementById('status-message').textContent = "Terjadi kesalahan. Silakan refresh halaman.";
-    });
-  }
-
-  // Tambahkan event listener untuk menerima token dari Turnstile
-  window.onload = function() {
-    turnstile.render('#turnstile-widget', {
-      sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
-      callback: handleTurnstileCallback,
-    });
-  };
-</script>
-
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-</body>

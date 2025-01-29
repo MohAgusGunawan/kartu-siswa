@@ -100,7 +100,7 @@
             </tr>
             <tr>
                 <th>Kelas</th>
-                <td>{{ $siswa->kelas }}</td>
+                <td>{{ $siswa->kelas->nama_kelas }}</td>
             </tr>
             <tr>
                 <th>Email</th>
