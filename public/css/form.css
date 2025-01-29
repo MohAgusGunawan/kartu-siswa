@@ -158,10 +158,8 @@ td {
     /* background-color: white; */
     padding: 20px;
     text-align: center;
-    max-width: 90%;
     width: 100%;
     position: absolute;
-    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
