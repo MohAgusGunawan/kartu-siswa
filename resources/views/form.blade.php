@@ -26,9 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     $result = json_decode($result);
 
     if ($result->success) {
-        echo json_encode(['success' => true, 'message' => 'Anda adalah manusia!']);
+        $statusMessage = "Anda adalah manusia!";
+        $hideCaptcha = true; // Set untuk menyembunyikan CAPTCHA
     } else {
-        echo json_encode(['success' => false, 'message' => 'Verifikasi gagal. Silakan coba lagi.']);
+        $statusMessage = "Verifikasi gagal. Silakan coba lagi.";
     }
 }
 ?>
@@ -213,15 +214,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     
         // Pastikan Turnstile API sudah dimuat sebelum render
         document.addEventListener("DOMContentLoaded", function () {
-            const widgetContainer = document.getElementById('turnstile-widget');
-            if (widgetContainer && !widgetContainer.hasChildNodes()) {
+            window.onload = function() {
                 turnstile.render('#turnstile-widget', {
-                    sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Pastikan Site Key yang benar
-                    callback: handleTurnstileCallback,
+                sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
+                callback: handleTurnstileCallback,
                 });
-            }
+            };
         });
-        document.getElementById('turnstile-widget').style.display = 'none';
     </script>    
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
