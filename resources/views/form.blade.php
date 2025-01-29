@@ -213,7 +213,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     
         // Pastikan Turnstile API sudah dimuat sebelum render
         document.addEventListener("DOMContentLoaded", function () {
-            if (typeof turnstile !== 'undefined') {
                 const widgetContainer = document.getElementById('turnstile-widget');
                 if (widgetContainer && !widgetContainer.hasChildNodes()) {
                     turnstile.render('#turnstile-widget', {
@@ -221,9 +220,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
                         callback: handleTurnstileCallback,
                     });
                 }
-            } else {
-                console.error('Turnstile API tidak terdefinisi.');
-            }
         });
     </script>    
 
