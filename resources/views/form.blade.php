@@ -26,10 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     $result = json_decode($result);
 
     if ($result->success) {
-        $statusMessage = "Anda adalah manusia!";
-        $hideCaptcha = true; // Set untuk menyembunyikan CAPTCHA
+        echo json_encode(['success' => true, 'message' => 'Anda adalah manusia!']);
     } else {
-        $statusMessage = "Verifikasi gagal. Silakan coba lagi.";
+        echo json_encode(['success' => false, 'message' => 'Verifikasi gagal. Silakan coba lagi.']);
     }
 }
 ?>
@@ -186,7 +185,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <script>
         // Fungsi untuk menangani respons Turnstile
         function handleTurnstileCallback(token) {
-            // Kirim token ke backend untuk validasi
             fetch(window.location.href, {
                 method: 'POST',
                 headers: {
@@ -194,10 +192,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
                 },
                 body: `token=${encodeURIComponent(token)}`,
             })
-            .then(response => response.text())
-            .then(html => {
-                // Ganti konten halaman dengan respons backend
-                document.body.innerHTML = html;
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('turnstile-widget').style.display = 'none';
+                    document.getElementById('status-message').textContent = "Anda adalah manusia!";
+                } else {
+                    document.getElementById('status-message').textContent = "Verifikasi gagal. Silakan coba lagi.";
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -207,10 +209,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     
         // Tambahkan event listener untuk menerima token dari Turnstile
         window.onload = function() {
-            turnstile.render('#turnstile-widget', {
-                sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
-                callback: handleTurnstileCallback,
-            });
+            if (!document.getElementById('turnstile-widget').hasChildNodes()) {
+                turnstile.render('#turnstile-widget', {
+                    sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
+                    callback: handleTurnstileCallback,
+                });
+            }
         };
     </script>
 
