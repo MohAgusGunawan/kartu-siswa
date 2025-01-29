@@ -195,6 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    console.log('Anda adalah manusia!');
                     document.getElementById('turnstile-widget').style.display = 'none';
                     document.getElementById('status-message').textContent = "Anda adalah manusia!";
                 } else {
