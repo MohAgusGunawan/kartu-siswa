@@ -209,14 +209,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     
         // Tambahkan event listener untuk menerima token dari Turnstile
         document.addEventListener("DOMContentLoaded", function () {
-            const widgetContainer = document.getElementById('turnstile-widget');
-            if (widgetContainer && !widgetContainer.hasChildNodes()) {
+            if (!document.getElementById('turnstile-widget').hasChildNodes()) {
                 turnstile.render('#turnstile-widget', {
                     sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
                     callback: handleTurnstileCallback,
                 });
             }
-        }, { once: true });
+        });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
