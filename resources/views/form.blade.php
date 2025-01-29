@@ -1,5 +1,5 @@
 <?php
-// Proses validasi CAPTCHA di backend
+// Proses validasi Turnstile di backend
 $statusMessage = "";
 $hideCaptcha = false;
 
@@ -26,10 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     $result = json_decode($result);
 
     if ($result->success) {
-        $statusMessage = "Verifikasi berhasil! Anda adalah manusia.";
-        $hideCaptcha = true;
+        $statusMessage = "Anda adalah manusia!";
+        $hideCaptcha = true; // Set untuk menyembunyikan CAPTCHA
+        error_log("CAPTCHA sukses: " . $statusMessage); // Log pesan sukses
     } else {
         $statusMessage = "Verifikasi gagal. Silakan coba lagi.";
+        error_log("CAPTCHA gagal: " . $statusMessage); // Log pesan gagal
     }
 }
 ?>
@@ -174,15 +176,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <!--</div>-->
 
     <div class="captcha-container">
+        <!-- Tampilkan CAPTCHA jika belum diverifikasi -->
         <?php if (!$hideCaptcha): ?>
             <div id="turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAA6j75MpRvhSaHTH"></div>
         <?php endif; ?>
+    
+        <!-- Pesan status -->
         <p id="status-message"><?php echo $statusMessage; ?></p>
-    </div>    
+    </div>
     
     <script>
+        // Fungsi untuk menangani respons Turnstile
         function handleTurnstileCallback(token) {
-            // Kirim token ke backend untuk validasi
             fetch(window.location.href, {
                 method: 'POST',
                 headers: {
@@ -192,20 +197,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
             })
             .then(response => response.text())
             .then(html => {
-                // Perbarui konten halaman dengan respons dari backend
+                console.log("Respons dari backend:", html); // Log respons dari backend
                 document.getElementById('status-message').innerHTML = html;
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('status-message').textContent = "Terjadi kesalahan. Silakan coba lagi.";
+                document.getElementById('status-message').textContent = "Terjadi kesalahan. Silakan refresh halaman.";
             });
         }
     
-        // Inisialisasi widget Turnstile
+        // Tambahkan event listener untuk menerima token dari Turnstile
         window.onload = function() {
             turnstile.render('#turnstile-widget', {
                 sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
-                callback: handleTurnstileCallback
+                callback: handleTurnstileCallback,
             });
         };
     </script>
