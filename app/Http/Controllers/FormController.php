@@ -81,7 +81,7 @@ class FormController extends Controller
         ]);
 
         // Verifikasi reCAPTCHA
-        $recaptchaSecretKey = env('RECAPTCHA_SECRET_KEY');  // Ambil secret key dari .env
+        $recaptchaSecretKey = env('6Ldea8YqAAAAABO6nnoIS1vsemeuOIzcXQjQukOm');  // Ambil secret key dari .env
         $recaptchaResponse = $request->input('g-recaptcha-response');
 
         $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
