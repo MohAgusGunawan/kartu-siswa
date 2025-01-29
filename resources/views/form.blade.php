@@ -199,6 +199,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
                     document.getElementById('turnstile-widget').style.display = 'none';
                     document.getElementById('status-message').textContent = "Anda adalah manusia!";
                 } else {
+                    console.log('Verifikasi gagal. Silakan coba lagi.');
                     document.getElementById('status-message').textContent = "Verifikasi gagal. Silakan coba lagi.";
                 }
             })
