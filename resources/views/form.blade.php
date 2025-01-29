@@ -141,7 +141,7 @@
     <div class="d-flex justify-content-center align-items-center" id="captchaContainer">
         <div class="text-center">
             <h5>Verifikasi reCAPTCHA untuk melanjutkan</h5>
-            <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY" data-callback="enableForm"></div>
+            <div class="g-recaptcha" data-sitekey="6Ldea8YqAAAAANI0SwXXs-OxOE3IehdyPJ37mV2W" data-callback="enableForm"></div>
         </div>
     </div>
 
