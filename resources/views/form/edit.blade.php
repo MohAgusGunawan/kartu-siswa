@@ -6,6 +6,7 @@
     <title>Edit Siswa</title>
     <!-- Tambahkan CSS Bootstrap atau custom CSS sesuai kebutuhan -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" href="{{ asset('storage/app/public/images/logo/logo.jpg') }}" sizes="16x16" />
     <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
     <!-- Include Select2 CSS CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />

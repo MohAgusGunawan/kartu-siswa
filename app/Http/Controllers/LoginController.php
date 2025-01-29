@@ -29,7 +29,7 @@ class LoginController extends Controller
          }
  
          return back()->withErrors([
-             'email' => 'Email atau password salah.',
+             $request->session()->flash('error', 'Email atau password salah.'),
          ]);
      }
  
