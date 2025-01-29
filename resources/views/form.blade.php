@@ -121,6 +121,9 @@
                 <img id="img-preview" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Foto Pelajar" class="img-thumbnail img-preview mt-2">
             </div>
 
+            <div class="form-group">
+                <div class="g-recaptcha" data-sitekey="6Ldea8YqAAAAANI0SwXXs-OxOE3IehdyPJ37mV2W"></div>
+            </div>
 
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
@@ -137,13 +140,6 @@
         </div>
         <br>
     <!--</div>-->
-
-    <div class="d-flex justify-content-center align-items-center" id="captchaContainer">
-        <div class="text-center">
-            <h5>Verifikasi reCAPTCHA untuk melanjutkan</h5>
-            <div class="g-recaptcha" data-sitekey="6Ldea8YqAAAAANI0SwXXs-OxOE3IehdyPJ37mV2W" data-callback="enableForm"></div>
-        </div>
-    </div>
 
     <script>
         function enableForm() {

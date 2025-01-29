@@ -77,8 +77,23 @@ class FormController extends Controller
             'kelas' => 'required|string|max:10',
             'email' => 'required|email',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'g-recaptcha-response' => 'required',  // Tambahkan validasi reCAPTCHA
         ]);
 
+        // Verifikasi reCAPTCHA
+        $recaptchaSecretKey = env('RECAPTCHA_SECRET_KEY');  // Ambil secret key dari .env
+        $recaptchaResponse = $request->input('g-recaptcha-response');
+
+        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+        $response = file_get_contents($verifyUrl . '?secret=' . $recaptchaSecretKey . '&response=' . $recaptchaResponse);
+        $responseKeys = json_decode($response, true);
+
+        // Jika verifikasi gagal, kirimkan pesan error
+        if (!$responseKeys['success']) {
+            return redirect()->back()->withErrors(['captcha' => 'Captcha verification failed.'])->withInput();
+        }
+
+        // Proses penyimpanan data siswa
         $siswa = new Siswa();
         $siswa->id_card = '';
         $siswa->nis = $request->nis;
@@ -143,6 +158,7 @@ class FormController extends Controller
         // Simpan data siswa ke database
         $siswa->save();
         
+        // Kirim email setelah data berhasil disimpan
         Mail::send('emails.form_submitted', ['siswa' => $siswa], function($message) use ($request) {
             $message->to($request->email)
                     ->subject('Form Submitted');

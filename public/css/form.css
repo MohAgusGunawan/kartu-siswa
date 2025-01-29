@@ -154,8 +154,7 @@ td {
     overflow-x: auto;
 } */
 
-#captchaContainer {
-    /* background-color: white; */
+/* #captchaContainer {
     padding: 20px;
     text-align: center;
     width: 100%;
@@ -170,7 +169,7 @@ td {
 
 .cf-turnstile {
     margin: 0 auto;
-}
+} */
 
 @media (max-width: 785px) {
     .container {
