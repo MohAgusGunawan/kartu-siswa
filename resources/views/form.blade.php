@@ -1,5 +1,5 @@
 <?php
-// Proses validasi Turnstile di backend
+// Proses validasi CAPTCHA di backend
 $statusMessage = "";
 $hideCaptcha = false;
 
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     $result = json_decode($result);
 
     if ($result->success) {
-        $statusMessage = "Anda adalah manusia!";
+        $statusMessage = "Verifikasi berhasil! Anda adalah manusia.";
         $hideCaptcha = true;
     } else {
         $statusMessage = "Verifikasi gagal. Silakan coba lagi.";
@@ -174,44 +174,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['token'])) {
     <!--</div>-->
 
     <div class="captcha-container">
-        {{-- @include('captcha') --}}
-        <!-- Tampilkan CAPTCHA jika belum diverifikasi -->
         <?php if (!$hideCaptcha): ?>
             <div id="turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAA6j75MpRvhSaHTH"></div>
         <?php endif; ?>
-    
-        <!-- Pesan status -->
         <p id="status-message"><?php echo $statusMessage; ?></p>
-    </div>
+    </div>    
     
     <script>
-        function previewImage(event) {
-            var reader = new FileReader();
-            reader.onload = function(){
-                var output = document.getElementById('img-preview');
-                output.src = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    
         function handleTurnstileCallback(token) {
+            // Kirim token ke backend untuk validasi
             fetch(window.location.href, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: `token=${encodeURIComponent(token)}`
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `token=${encodeURIComponent(token)}`,
             })
             .then(response => response.text())
-            .then(html => { document.body.innerHTML = html; })
+            .then(html => {
+                // Perbarui konten halaman dengan respons dari backend
+                document.getElementById('status-message').innerHTML = html;
+            })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('status-message').textContent = "Terjadi kesalahan. Silakan refresh halaman.";
+                document.getElementById('status-message').textContent = "Terjadi kesalahan. Silakan coba lagi.";
             });
         }
     
+        // Inisialisasi widget Turnstile
         window.onload = function() {
             turnstile.render('#turnstile-widget', {
-                sitekey: '0x4AAAAAAA6j75MpRvhSaHTH',
-                callback: handleTurnstileCallback,
+                sitekey: '0x4AAAAAAA6j75MpRvhSaHTH', // Ganti dengan Site Key Anda
+                callback: handleTurnstileCallback
             });
         };
     </script>
