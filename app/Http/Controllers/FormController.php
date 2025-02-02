@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
 use App\Models\Kelas;
+use App\Models\TahunAkademik;
 
 class FormController extends Controller
 {
@@ -93,6 +94,29 @@ class FormController extends Controller
             return redirect()->back()->withErrors(['captcha' => 'Captcha verification failed.'])->withInput();
         }
 
+        // Hitung tahun akademik berdasarkan bulan sekarang
+        $tahunSekarang = date('Y');
+        $bulanSekarang = date('n'); // Ambil bulan (1-12)
+
+        if ($bulanSekarang >= 7) {
+            // Jika bulan Juli atau setelahnya, tahun akademik baru dimulai
+            $tahunAkademikSekarang = $tahunSekarang . '/' . ($tahunSekarang + 1);
+        } else {
+            // Jika masih sebelum Juli, masih tahun akademik sebelumnya
+            $tahunAkademikSekarang = ($tahunSekarang - 1) . '/' . $tahunSekarang;
+        }
+
+        // Cek apakah tahun akademik ini sudah ada
+        $tahunAkademik = TahunAkademik::where('tahun', $tahunAkademikSekarang)->first();
+
+        // Jika belum ada, buat tahun akademik baru
+        if (!$tahunAkademik) {
+            $tahunAkademik = TahunAkademik::create([
+                'tahun' => $tahunAkademikSekarang,
+                'status' => 'aktif' // Atur statusnya sesuai kebutuhan
+            ]);
+        }
+
         // Proses penyimpanan data siswa
         $siswa = new Siswa();
         $siswa->id_card = '';
@@ -108,6 +132,12 @@ class FormController extends Controller
         $siswa->wa = $request->wa;
         $siswa->kelas_id = $request->kelas;
         $siswa->email = $request->email;
+
+        // Set status cetak default "Belum"
+        $siswa->status_cetak = "Belum";
+
+        // Simpan ID tahun akademik ke siswa
+        $siswa->id_tahun_akademik = $tahunAkademik->id;
 
         // Jika ada file foto yang di-upload
         if ($request->hasFile('foto')) {
@@ -157,7 +187,7 @@ class FormController extends Controller
 
         // Simpan data siswa ke database
         $siswa->save();
-        
+
         // Kirim email setelah data berhasil disimpan
         Mail::send('emails.form_submitted', ['siswa' => $siswa], function($message) use ($request) {
             $message->to($request->email)
@@ -217,6 +247,9 @@ class FormController extends Controller
             return back()->with('error', 'Tidak ada siswa dalam kelas ini.');
         }
 
+        // Update status_cetak untuk semua siswa dalam kelas ini
+        Siswa::where('kelas_id', $kelas->id)->update(['status_cetak' => 'sudah']);
+
         // Initialize Mpdf
         $mpdf = new \Mpdf\Mpdf([
             'format' => [88, 53.98], // Ukuran ID card dalam mm
@@ -253,6 +286,9 @@ class FormController extends Controller
         if (!$dataSiswa) {
             return back()->with('error', 'Data siswa tidak ditemukan.');
         }
+
+        // Update status_cetak untuk siswa yang dipilih
+        $dataSiswa->update(['status_cetak' => 'sudah']);
 
         // Initialize Mpdf
         $mpdf = new Mpdf([

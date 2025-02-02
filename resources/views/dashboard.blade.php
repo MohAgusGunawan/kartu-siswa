@@ -76,7 +76,7 @@
                             <ul class="dropdown-menu">
                                 @forelse($kelas as $kls)
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('form.downloadClassPdf', ['kelas' => $kls->nama_kelas]) }}">
+                                        <a class="dropdown-item cetak-perkelas" href="{{ route('form.downloadClassPdf', ['kelas' => $kls->nama_kelas]) }}">
                                             Kelas {{ $kls->nama_kelas }}
                                         </a>
                                     </li>
@@ -102,7 +102,7 @@
                                 <input type="text" class="form-control mb-2" id="search-dropdown" placeholder="Cari NIS...">
                                 <div id="dropdown-options">
                                     @forelse($nis as $nis_siswa)
-                                        <a class="dropdown-item" href="{{ route('form.downloadCardPdf', ['nis' => $nis_siswa->nis]) }}">
+                                        <a class="dropdown-item cetak-nis" href="{{ route('form.downloadCardPdf', ['nis' => $nis_siswa->nis]) }}">
                                             {{ $nis_siswa->nis }}
                                         </a>
                                     @empty
@@ -129,6 +129,8 @@
                             <th>Kelas</th>
                             <th>Email</th>
                             <th>Foto</th>
+                            <th>Tahun Akademik</th>
+                            <th>Status Cetak</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

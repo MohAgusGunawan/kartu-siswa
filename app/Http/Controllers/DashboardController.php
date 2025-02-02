@@ -15,36 +15,39 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
 use App\Models\Kelas;
+use App\Models\TahunAkademik;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Siswa::with('kelas')->get(); // Memuat relasi kelas
+            $data = Siswa::with(['kelas', 'tahunAkademik'])->get(); // Memuat relasi kelas dan tahun akademik
         
             $data = $data->map(function ($item) {
                 $siswaData = $item->toArray();
-                $siswaData['kelas'] = $item->kelas ? $item->kelas->nama_kelas : null; // Tambahkan nama_kelas ke data siswa
-                return array_map('utf8_encode', $siswaData); // Tetap gunakan utf8_encode jika diperlukan
+                $siswaData['kelas'] = $item->kelas ? $item->kelas->nama_kelas : null;
+                $siswaData['tahun_akademik'] = $item->tahunAkademik ? $item->tahunAkademik->tahun : null; // Tambahkan tahun akademik
+                return array_map('utf8_encode', $siswaData);
             });
         
             return Datatables::of($data)->make(true);
         }        
+
         $kota = $this->getKota();
         $rekapKelas = DB::table('siswa')
-        ->join('kelas', 'siswa.kelas_id', '=', 'kelas.id') // Bergabung dengan tabel kelas
-        ->select('kelas.nama_kelas', DB::raw('count(*) as jumlah')) // Mengambil nama_kelas dan jumlah siswa
-        ->groupBy('kelas.nama_kelas') // Grup berdasarkan nama_kelas
-        ->orderBy('kelas.nama_kelas', 'asc') // Urutkan berdasarkan nama_kelas
-        ->get();
+            ->join('kelas', 'siswa.kelas_id', '=', 'kelas.id')
+            ->select('kelas.nama_kelas', DB::raw('count(*) as jumlah'))
+            ->groupBy('kelas.nama_kelas')
+            ->orderBy('kelas.nama_kelas', 'asc')
+            ->get();
 
         $kelas = Kelas::all();
+        $tahunAkademik = TahunAkademik::all(); // Ambil semua tahun akademik
         $data = Siswa::all();
         $nis = Siswa::select('nis')->distinct()->orderBy('nis')->get();
 
-        return view('dashboard', compact('kota', 'data', 'rekapKelas', 'kelas', 'nis'));
-
+        return view('dashboard', compact('kota', 'data', 'rekapKelas', 'kelas', 'nis', 'tahunAkademik'));
     }
 
     public function downloadReport()
@@ -92,6 +95,9 @@ class DashboardController extends Controller
             return back()->with('error', 'Tidak ada siswa dalam kelas ini.');
         }
 
+        // Update status_cetak untuk semua siswa dalam kelas ini
+        Siswa::where('kelas_id', $kelas->id)->update(['status_cetak' => 'sudah']);
+
         // Initialize Mpdf
         $mpdf = new \Mpdf\Mpdf([
             'format' => [88, 53.98], // Ukuran ID card dalam mm
@@ -128,6 +134,9 @@ class DashboardController extends Controller
         if (!$dataSiswa) {
             return back()->with('error', 'Data siswa tidak ditemukan.');
         }
+
+        // Update status_cetak untuk siswa yang dipilih
+        $dataSiswa->update(['status_cetak' => 'sudah']);
 
         // Initialize Mpdf
         $mpdf = new Mpdf([

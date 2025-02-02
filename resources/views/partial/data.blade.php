@@ -83,7 +83,7 @@
                     let emailParts = data.split('@');
                     let emailMasked = emailParts[0].slice(0, 4).replace(/./g, 'x') + emailParts[0].slice(4) + '@' + 
                     emailParts[1];
-                    return emailMasked;
+                    return '<a href="mailto:' + data + '">' + emailMasked + '</a>';
                     }
                 },
                 {
@@ -96,6 +96,24 @@
                             return '---';
                         }
                     }  
+                },
+                {
+                    data: 'tahun_akademik',
+                    render: function (data, type, row, meta) {
+                        return data ? '<span class="badge bg-info">' + data + '</span>' : '<span class="badge bg-secondary">Belum Ditetapkan</span>';
+                    },
+                    className: "text-center"
+                },
+                {
+                    data: 'status_cetak',
+                    render: function (data, type, row, meta) {
+                        if (data === 'sudah') {
+                            return '<span class="badge bg-success"><i class="fas fa-check-circle"></i> Sudah Cetak</span>';
+                        } else {
+                            return '<span class="badge bg-danger"><i class="fas fa-times-circle"></i> Belum Cetak</span>';
+                        }
+                    },
+                    className: "text-center"
                 },
                 {
                     data: null,
@@ -140,6 +158,17 @@
             search_input.removeClass('form-control-sm');
             var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
             length_sel.removeClass('form-control-sm');
+        });
+
+        $(".cetak-perkelas").click(function (e) {
+            setTimeout(function () {
+                $('#tbSiswa').DataTable().ajax.reload(null, false);
+            }, 6000);
+        });
+        $(".cetak-nis").click(function (e) {
+            setTimeout(function () {
+                $('#tbSiswa').DataTable().ajax.reload(null, false);
+            }, 4000);
         });
     });
 

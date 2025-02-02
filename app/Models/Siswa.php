@@ -21,14 +21,21 @@ class Siswa extends Model
         'alamat',
         'wa',
         'kelas_id', 
+        'id_tahun_akademik',
         'email',
-        'foto'
+        'foto',
+        'status_cetak'
     ];
 
     // Relasi ke model Kelas
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'kelas_id');
+    }
+
+    public function tahunAkademik()
+    {
+        return $this->belongsTo(TahunAkademik::class, 'id_tahun_akademik');
     }
 
     // Jika tidak ingin menggunakan kolom created_at dan updated_at
