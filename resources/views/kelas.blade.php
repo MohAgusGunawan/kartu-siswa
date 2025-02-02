@@ -49,11 +49,11 @@
             serverSide: true,
             ajax: '{{ route("kelas.data") }}',
             columns: [
-                { 
+                {
                     data: null, 
                     name: 'nomor',
                     render: function(data, type, row, meta) {
-                        return meta.row + 1;
+                        return meta.row + 1 + meta.settings._iDisplayStart;
                     }
                 },
                 { data: 'nama_kelas', name: 'nama_kelas' },
