@@ -22,39 +22,34 @@
 
     <script>
         $(document).ready(function () {
-            $('#migrateButton').click(function () {
-                $('#result').html('<p>Proses migrasi sedang berjalan...</p>');
-
-                $.get('/migrate-photos', function (response) {
-                    $('#result').html('<p class="text-success">' + response.message + '</p>');
-                }).fail(function () {
-                    $('#result').html('<p class="text-danger">Gagal menjalankan migrasi.</p>');
-                });
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
             $('#migrateData').click(function () {
                 $('#migrationResult').html('<p>Proses migrasi sedang berjalan...</p>');
-
-                // Kirim permintaan ke server
+    
                 $.ajax({
-                    url: '/migrate-siswa-to-slims', // Rute yang akan dieksekusi
+                    url: '/migrate-siswa-to-slims', // Rute di Laravel lokal
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token CSRF Laravel
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     success: function (response) {
-                        $('#migrationResult').html('<p class="text-success">Data berhasil dimigrasikan!</p>');
+                        $('#migrationResult').html('<p class="text-success">' + response.message + '</p>');
                     },
                     error: function (xhr) {
                         $('#migrationResult').html('<p class="text-danger">Terjadi kesalahan: ' + xhr.responseText + '</p>');
                     }
                 });
             });
+    
+            $('#migrateButton').click(function () {
+                $('#result').html('<p>Proses migrasi foto sedang berjalan...</p>');
+    
+                $.get('/migrate-photos', function (response) {
+                    $('#result').html('<p class="text-success">' + response.message + '</p>');
+                }).fail(function () {
+                    $('#result').html('<p class="text-danger">Gagal menjalankan migrasi foto.</p>');
+                });
+            });
         });
-    </script>
+    </script>    
 </body>
 </html>

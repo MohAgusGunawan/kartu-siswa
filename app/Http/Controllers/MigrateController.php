@@ -28,42 +28,50 @@ class MigrateController extends Controller
         return response()->json($dataSiswa);
     }
 
-    public function migrateSiswaToSlims(Request $request)
+    public function migrateSiswaToSlims()
     {
         try {
-            // Ambil data siswa dari database utama
-            $siswaData = DB::table('siswa')->get();
+            // **Ganti dengan URL API Laravel yang online**
+            $apiUrl = "https://kartu-pelajar.gunawans.web.id/api/siswa"; 
+            
+            // Ambil data dari Laravel online
+            $response = Http::get($apiUrl);
+            if ($response->failed()) {
+                return response()->json(['message' => 'Gagal mengambil data dari server online'], 500);
+            }
+
+            $siswaData = $response->json(); // Konversi ke array
 
             foreach ($siswaData as $siswa) {
                 // Transformasi gender
-                $gender = $siswa->gender === 'Laki-laki' ? 1 : 0;
+                $gender = $siswa['gender'] === 'Laki-laki' ? 1 : 0;
 
-                // Ekstraksi tanggal lahir dari kolom TTL
-                $ttlParts = explode(',', $siswa->ttl);
+                // Ekstraksi tanggal lahir dari TTL
+                $ttlParts = explode(',', $siswa['ttl']);
                 $birthDate = isset($ttlParts[1]) ? date('Y-m-d', strtotime(trim($ttlParts[1]))) : null;
 
-                // Tambahkan prefix "member_" pada nama file foto
-                $memberImage = 'member_' . $siswa->foto;
+                // Nama foto dengan prefix "member_"
+                $memberImage = 'member_' . $siswa['foto'];
 
                 // Tentukan tanggal kedaluwarsa (1 tahun dari sekarang)
                 $expireDate = now()->addYear()->format('Y-m-d');
 
-                // Gunakan updateOrInsert untuk update jika member_id ada, atau insert jika tidak ada
+                // Masukkan ke database SLiMS
                 DB::connection('slims')->table('member')->updateOrInsert(
-                    ['member_id' => $siswa->nis], // Kondisi pencarian
+                    ['member_id' => $siswa['nis']], // Primary Key
                     [
-                        'member_name' => $siswa->nama,
+                        'member_name' => $siswa['nama'],
                         'gender' => $gender,
                         'birth_date' => $birthDate,
-                        'member_address' => $siswa->alamat,
+                        'member_address' => $siswa['alamat'],
                         'member_image' => $memberImage,
-                        'pin' => $siswa->id_card,
+                        'pin' => $siswa['id_card'],
                         'expire_date' => $expireDate,
                     ]
                 );
             }
 
-            return response()->json(['message' => 'Migrasi data berhasil!'], 200);
+            return response()->json(['message' => 'Migrasi data berhasil dari online ke SLiMS lokal!'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
@@ -71,29 +79,36 @@ class MigrateController extends Controller
 
     public function migratePhotos()
     {
-        $siswaData = DB::table('siswa')->get(); // Ambil data siswa dari database Kartu Siswa
+        try {
+            // **Ganti dengan URL API Laravel yang online**
+            $apiUrl = "https://kartu-pelajar.gunawans.web.id/api/siswa"; 
 
-        foreach ($siswaData as $siswa) {
-            // Lokasi sumber dan tujuan file
-            $sourcePath = storage_path('app/public/images/siswa/' . $siswa->foto);
-            $destinationPath = 'D:\laragon\www\slims\images\siswa\member_' . $siswa->foto;
-
-            // Periksa apakah file sumber ada
-            if (File::exists($sourcePath)) {
-                // Buat folder tujuan jika belum ada
-                $destinationDir = dirname($destinationPath);
-                if (!File::exists($destinationDir)) {
-                    File::makeDirectory($destinationDir, 0755, true);
-                }
-
-                // Salin file ke lokasi tujuan
-                File::copy($sourcePath, $destinationPath);
-            } else {
-                // Log jika file tidak ditemukan
-                Log::warning("File tidak ditemukan: $sourcePath");
+            // Ambil data dari Laravel online
+            $response = Http::get($apiUrl);
+            if ($response->failed()) {
+                return response()->json(['message' => 'Gagal mengambil data dari server online'], 500);
             }
-        }
 
-        return response()->json(['message' => 'Migrasi file selesai.']);
+            $siswaData = $response->json(); // Konversi ke array
+
+            foreach ($siswaData as $siswa) {
+                $fotoUrl = $siswa['foto']; // Ambil URL gambar dari API
+
+                // Lokasi penyimpanan di SLiMS lokal
+                $destinationPath = 'D:\laragon\www\slims\images\siswa\member_' . basename($fotoUrl);
+
+                // **Download dan simpan foto**
+                $fileContents = file_get_contents($fotoUrl);
+                if ($fileContents !== false) {
+                    File::put($destinationPath, $fileContents);
+                } else {
+                    Log::warning("Gagal mengunduh gambar: $fotoUrl");
+                }
+            }
+
+            return response()->json(['message' => 'Migrasi foto dari online ke lokal selesai.']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+        }
     }
 }
