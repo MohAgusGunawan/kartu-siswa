@@ -14,19 +14,24 @@ class MigrateController extends Controller
 {
     public function index()
     {
-        $dataSiswa = Siswa::all()->map(function ($siswa) {
-            return [
-                'nama' => $siswa->nama,
-                'nis' => $siswa->nis,
-                'ttl' => $siswa->ttl,
-                'alamat' => $siswa->alamat,
-                'gender' => $siswa->gender,
-                'id_card' => $siswa->id_card,
-                'foto' => asset("storage/app/public/images/siswa/{$siswa->foto}")
-            ];
-        });
-    
-        return response()->json($dataSiswa);
+        try {
+            //code...
+            $dataSiswa = Siswa::all()->map(function ($siswa) {
+                return [
+                    'nama' => $siswa->nama,
+                    'nis' => $siswa->nis,
+                    'ttl' => $siswa->ttl,
+                    'alamat' => $siswa->alamat,
+                    'gender' => $siswa->gender,
+                    'id_card' => $siswa->id_card,
+                    'foto' => asset("storage/images/siswa/{$siswa->foto}")
+                ];
+            });
+        
+            return response()->json($dataSiswa);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public function migrateSiswaToSlims()
@@ -38,6 +43,7 @@ class MigrateController extends Controller
             // Ambil data dari Laravel online
             $response = Http::get($apiUrl);
             if ($response->failed()) {
+                
                 return response()->json(['message' => 'Gagal mengambil data dari server online'], 500);
             }
 
@@ -52,7 +58,8 @@ class MigrateController extends Controller
                 $birthDate = isset($ttlParts[1]) ? date('Y-m-d', strtotime(trim($ttlParts[1]))) : null;
 
                 // Nama foto dengan prefix "member_"
-                $memberImage = 'member_' . $siswa['foto'];
+                $namaFile = basename($siswa['foto']); // Ambil hanya nama file dari URL
+                $memberImage = 'member_' . $namaFile;
 
                 // Tentukan tanggal kedaluwarsa (1 tahun dari sekarang)
                 $expireDate = now()->addYear()->format('Y-m-d');
@@ -67,6 +74,7 @@ class MigrateController extends Controller
                         'member_address' => $siswa['alamat'],
                         'member_image' => $memberImage,
                         'pin' => $siswa['id_card'],
+                        'register_date' => now()->format('Y-m-d'),
                         'expire_date' => $expireDate,
                     ]
                 );
@@ -79,37 +87,55 @@ class MigrateController extends Controller
     }
 
     public function migratePhotos()
-    {
-        try {
-            // **Ganti dengan URL API Laravel yang online**
-            $apiUrl = "https://kartu-pelajar.gunawans.web.id/api/siswa"; 
+{
+    try {
+        // URL API Laravel yang online
+        $apiUrl = "https://kartu-pelajar.gunawans.web.id/api/siswa"; 
 
-            // Ambil data dari Laravel online
-            $response = Http::get($apiUrl);
-            if ($response->failed()) {
-                return response()->json(['message' => 'Gagal mengambil data dari server online'], 500);
-            }
-
-            $siswaData = $response->json(); // Konversi ke array
-
-            foreach ($siswaData as $siswa) {
-                $fotoUrl = $siswa['foto']; // Ambil URL gambar dari API
-
-                // Lokasi penyimpanan di SLiMS lokal
-                $destinationPath = 'D:\laragon\www\slims\images\siswa\member_' . basename($fotoUrl);
-
-                // **Download dan simpan foto**
-                $fileContents = file_get_contents($fotoUrl);
-                if ($fileContents !== false) {
-                    File::put($destinationPath, $fileContents);
-                } else {
-                    Log::warning("Gagal mengunduh gambar: $fotoUrl");
-                }
-            }
-
-            return response()->json(['message' => 'Migrasi foto dari online ke lokal selesai.']);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+        // Ambil data siswa dari API
+        $response = Http::get($apiUrl);
+        if ($response->failed()) {
+            return response()->json(['message' => 'Gagal mengambil data dari server online'], 500);
         }
+
+        $siswaData = $response->json(); // Konversi ke array
+
+        foreach ($siswaData as $siswa) {
+            // Pastikan ada foto
+            if (!isset($siswa['foto']) || empty($siswa['foto'])) {
+                Log::warning("Siswa {$siswa['nama']} tidak memiliki foto.");
+                continue;
+            }
+
+            $fotoUrl = $siswa['foto']; // URL langsung dari API
+            
+            // Ambil nama file dari URL
+            $fileName = basename($fotoUrl);
+
+            // Lokasi penyimpanan di SLiMS lokal
+            $destinationPath = 'D:\laragon\www\slims\images\siswa\member_' . $fileName;
+
+            // Cek apakah file sudah ada, agar tidak mendownload ulang
+            if (File::exists($destinationPath)) {
+                Log::info("Foto sudah ada: $fileName");
+                continue;
+            }
+
+            // Gunakan cURL untuk download file agar lebih stabil
+            $ch = curl_init($fotoUrl);
+            $fp = fopen($destinationPath, 'wb');
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_exec($ch);
+            curl_close($ch);
+            fclose($fp);
+
+            Log::info("Berhasil mengunduh: $fotoUrl");
+        }
+
+        return response()->json(['message' => 'Migrasi foto dari online ke lokal selesai.']);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
     }
+}
 }

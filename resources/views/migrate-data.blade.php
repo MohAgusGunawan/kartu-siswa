@@ -35,6 +35,7 @@
                         $('#migrationResult').html('<p class="text-success">' + response.message + '</p>');
                     },
                     error: function (xhr) {
+                        console.log(xhr)
                         $('#migrationResult').html('<p class="text-danger">Terjadi kesalahan: ' + xhr.responseText + '</p>');
                     }
                 });

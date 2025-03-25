@@ -44,7 +44,8 @@
                     } else {
                         $('#result').html('<p class="text-danger">Tidak ada data siswa.</p>');
                     }
-                }).fail(function() {
+                }).fail(function(err) {
+                    console.log(err)
                     $('#result').html('<p class="text-danger">Gagal memuat data.</p>');
                 });
             });
